@@ -1,0 +1,391 @@
+{
+    "brands": [
+        {
+            "id": "mitsubishi",
+            "name": "Mitsubishi",
+            "slug": "mitsubishi",
+            "models": [
+                "L200",
+                "Katana",
+                "Dakar",
+                "Montero",
+                "Outlander",
+                "ASX",
+                "Eclipse Cross",
+                "Mirage",
+                "Xpander"
+            ],
+            "image": "/images/marcas/mitsubishi_logo.svg",
+            "heroImage": "/images/categorias/repuestos-mitsubishi.png"
+        },
+        {
+            "id": "ssangyong",
+            "name": "SsangYong",
+            "slug": "ssangyong",
+            "models": [
+                "Actyon",
+                "Actyon Sports",
+                "Musso",
+                "Rexton",
+                "Korando",
+                "Tivoli",
+                "Stavic",
+                "Torres"
+            ],
+            "image": "/images/marcas/SsangYong_logo.png",
+            "heroImage": "/images/categorias/repuestos-ssangyong.png"
+        },
+        {
+            "id": "jeep",
+            "name": "Jeep",
+            "slug": "jeep",
+            "models": [
+                "Grand Cherokee",
+                "Cherokee",
+                "Wrangler",
+                "Rubicon",
+                "Compass",
+                "Renegade",
+                "Gladiator"
+            ],
+            "image": "/images/marcas/Jeep_logo.svg",
+            "heroImage": "/images/categorias/repuestos-jeep.png"
+        },
+        {
+            "id": "chrysler",
+            "name": "Chrysler",
+            "slug": "chrysler",
+            "models": [
+                "300",
+                "Pacifica",
+                "Town & Country",
+                "Voyager",
+                "PT Cruiser"
+            ],
+            "image": "/images/marcas/Chrysler_Group_logo.svg",
+            "heroImage": "/images/categorias/repuestos-chrysler.jpeg"
+        },
+        {
+            "id": "dodge",
+            "name": "Dodge",
+            "slug": "dodge",
+            "models": [
+                "Ram",
+                "Dakota",
+                "Durango",
+                "Journey",
+                "Challenger",
+                "Charger",
+                "Nitro",
+                "Caliber"
+            ],
+            "image": "/images/marcas/Dodge_2022_logo.svg",
+            "heroImage": "/images/categorias/repuestos-dodge.jpeg"
+        },
+        {
+            "id": "ram",
+            "name": "Ram",
+            "slug": "ram",
+            "models": [
+                "1500",
+                "2500",
+                "3500",
+                "700",
+                "1000",
+                "Rampage"
+            ],
+            "image": "/images/marcas/ram_logo.png",
+            "heroImage": "/images/categorias/repuestos-ram.jpeg"
+        },
+        {
+            "id": "fiat",
+            "name": "Fiat",
+            "slug": "fiat",
+            "models": [
+                "Strada",
+                "Fiorino",
+                "Ducato",
+                "Fullback",
+                "Mobi",
+                "Uno",
+                "Palio",
+                "Punto",
+                "500",
+                "Titano"
+            ],
+            "image": "/images/marcas/Fiat_logo.svg.png",
+            "heroImage": "/images/categorias/repuestos-fiat.jpeg"
+        },
+        {
+            "id": "chery",
+            "name": "Chery",
+            "slug": "chery",
+            "models": [
+                "Tiggo 2",
+                "Tiggo 3",
+                "Tiggo 4",
+                "Tiggo 7",
+                "Tiggo 8",
+                "IQ",
+                "Arrizo"
+            ],
+            "image": "/images/marcas/Chery_logo.svg.png",
+            "heroImage": "/images/categorias/repuestos-chery.jpeg"
+        },
+        {
+            "id": "jmc",
+            "name": "JMC",
+            "slug": "jmc",
+            "models": [
+                "Vigus",
+                "Vigus Work",
+                "Vigus Pro",
+                "Vigus EV",
+                "Grand Avenue",
+                "Carrying"
+            ],
+            "image": "/images/marcas/JMC_Motor_logo.png",
+            "heroImage": "/images/categorias/repuestos-jmc.jpeg"
+        },
+        {
+            "id": "omoda",
+            "name": "Omoda",
+            "slug": "omoda",
+            "models": [
+                "C5",
+                "E5"
+            ],
+            "image": "/images/marcas/omoda_logo.png",
+            "heroImage": "/images/categorias/repuestos-omoda.png"
+        }
+    ],
+    "categories": [
+        {
+            "id": "filtros",
+            "title": "Filtros",
+            "slug": "filtros",
+            "description": "Filtros de aire, aceite, combustible y cabina.",
+            "image": "/images/categorias/cat-filtros.jpeg",
+            "items": [
+                "Filtro de Aire",
+                "Filtro de Aceite",
+                "Filtro de Combustible",
+                "Filtro de Cabina",
+                "Kit de Filtros"
+            ]
+        },
+        {
+            "id": "pastillas-freno",
+            "title": "Pastillas de Freno",
+            "slug": "pastillas-freno",
+            "description": "Frenado seguro y eficiente.",
+            "image": "/images/categorias/cat-pastillas.jpeg",
+            "items": [
+                "Pastillas Delanteras",
+                "Pastillas Traseras",
+                "Pastillas Cerámica",
+                "Sensor de Desgaste"
+            ]
+        },
+        {
+            "id": "correas",
+            "title": "Correas",
+            "slug": "correas",
+            "description": "Correas de distribución y accesorios.",
+            "image": "/images/categorias/cat-correas.jpeg",
+            "items": [
+                "Correa de Distribución",
+                "Correa de Accesorios",
+                "Correa de Alternador",
+                "Kit de Distribución"
+            ]
+        },
+        {
+            "id": "aceite-originales",
+            "title": "Aceite Originales",
+            "slug": "aceite-originales",
+            "description": "Lubricantes certificados para tu motor.",
+            "image": "/images/categorias/cat-aceites.jpeg",
+            "items": [
+                "Aceite Motor Diesel",
+                "Aceite Motor Gasolina",
+                "Aceite de Caja",
+                "Aceite Diferencial",
+                "Refrigerante"
+            ]
+        },
+        {
+            "id": "parachoques",
+            "title": "Parachoques",
+            "slug": "parachoques",
+            "description": "Parachoques delanteros y traseros.",
+            "image": "/images/categorias/cat-parachoques.jpeg",
+            "items": [
+                "Parachoques Delantero",
+                "Parachoques Trasero",
+                "Soportes de Parachoques",
+                "Molduras"
+            ]
+        },
+        {
+            "id": "capot",
+            "title": "Capot",
+            "slug": "capot",
+            "description": "Capots originales y alternativos certificados.",
+            "image": "/images/categorias/cat-capot.jpeg",
+            "items": [
+                "Capot Original",
+                "Capot Alternativo",
+                "Bisagras de Capot",
+                "Aislante de Capot"
+            ]
+        },
+        {
+            "id": "tapabarro",
+            "title": "Tapabarro",
+            "slug": "tapabarro",
+            "description": "Tapabarros laterales.",
+            "image": "/images/categorias/cat-tapabarros.jpeg",
+            "items": [
+                "Tapabarro Delantero Izquierdo",
+                "Tapabarro Delantero Derecho",
+                "Guardapfangos"
+            ]
+        },
+        {
+            "id": "puertas",
+            "title": "Puertas",
+            "slug": "puertas",
+            "description": "Puertas completas y componentes.",
+            "image": "/images/categorias/cat-puertas.jpeg",
+            "items": [
+                "Puerta Delanteras",
+                "Puerta Traseras",
+                "Portalón Trasero",
+                "Manillas",
+                "Alzavidrios"
+            ]
+        },
+        {
+            "id": "vidrios",
+            "title": "Vidrios",
+            "slug": "vidrios",
+            "description": "Parabrisas, lunetas y vidrios laterales.",
+            "image": "/images/categorias/cat-vidrios.jpeg",
+            "items": [
+                "Parabrisas",
+                "Luneta Trasera",
+                "Vidrio Puerta Delantero",
+                "Vidrio Puerta Trasero",
+                "Aletas"
+            ]
+        },
+        {
+            "id": "faroles",
+            "title": "Faroles",
+            "slug": "faroles",
+            "description": "Iluminación principal y señalización.",
+            "image": "/images/categorias/cat-faroles.jpeg",
+            "items": [
+                "Focos Principales",
+                "Focos Traseros",
+                "Intermitentes",
+                "Neblineros",
+                "Tercera Luz Freno"
+            ]
+        },
+        {
+            "id": "inyeccion-diesel",
+            "title": "Inyección y Filtración Diesel",
+            "slug": "inyeccion-diesel",
+            "description": "Especialistas en Common Rail y Bombas Inyectoras.",
+            "image": "/images/categorias/cat-inyectores.jpeg",
+            "items": [
+                "Inyectores Diesel",
+                "Bombas Inyectoras",
+                "Válvulas SCV",
+                "Cañerías",
+                "Turbos"
+            ]
+        },
+        {
+            "id": "accesorios",
+            "title": "Accesorios",
+            "slug": "accesorios",
+            "description": "Equipamiento 4x4 y complementos.",
+            "image": "/images/categorias/cat-accesorios.jpeg",
+            "items": [
+                "Lonas",
+                "Barras Antivuelco",
+                "Pisaderas",
+                "Defensas",
+                "Cúpulas",
+                "Enganches"
+            ]
+        },
+        {
+            "id": "baterias",
+            "title": "Baterías Intimidator",
+            "slug": "baterias",
+            "description": "Baterías Americanas de Alta Gama.",
+            "image": "/images/categorias/cat-baterias.png",
+            "items": [
+                "Marca Intimidator (Made in USA)",
+                "Especial para Autos Americanos",
+                "Compatible con Autos Coreanos",
+                "Baterías de Gel y Solares",
+                "Rango de 26 a 225 Amp",
+                "Alta Gama / Heavy Duty"
+            ]
+        }
+    ],
+    "partCategories": [
+        {
+            "name": "Filtros",
+            "image": "https://placehold.co/400x300/e2e8f0/1e293b?text=Filtros",
+            "slug": "filtros"
+        },
+        {
+            "name": "Frenos",
+            "image": "https://placehold.co/400x300/e2e8f0/1e293b?text=Frenos",
+            "slug": "frenos"
+        },
+        {
+            "name": "Motor",
+            "image": "https://placehold.co/400x300/e2e8f0/1e293b?text=Motor",
+            "slug": "motor"
+        },
+        {
+            "name": "Suspensión",
+            "image": "https://placehold.co/400x300/e2e8f0/1e293b?text=Suspensión",
+            "slug": "suspension"
+        },
+        {
+            "name": "Carrocería",
+            "image": "https://placehold.co/400x300/e2e8f0/1e293b?text=Carrocería",
+            "slug": "carroceria"
+        },
+        {
+            "name": "Eléctrico",
+            "image": "https://placehold.co/400x300/e2e8f0/1e293b?text=Eléctrico",
+            "slug": "electrico"
+        },
+        {
+            "name": "Refrigeración",
+            "image": "https://placehold.co/400x300/e2e8f0/1e293b?text=Refrigeración",
+            "slug": "refrigeracion"
+        },
+        {
+            "name": "Accesorios",
+            "image": "https://placehold.co/400x300/e2e8f0/1e293b?text=Accesorios",
+            "slug": "accesorios"
+        }
+    ],
+    "seoLocations": [
+        "La Serena",
+        "Coquimbo",
+        "Copiapó",
+        "Región de Coquimbo",
+        "Región de Atacama"
+    ]
+}

@@ -1,0 +1,67 @@
+{
+  "categories": [
+    {
+      "id": "originales",
+      "title": "Repuestos Originales",
+      "description": "Calidad garantizada para tu vehículo.",
+      "image": "/images/categories/originales.webp",
+      "items": [
+        "Filtros",
+        "Pastillas de Freno",
+        "Correas",
+        "Aceites Originales",
+        "Parachoques",
+        "Capot",
+        "Tapabarro",
+        "Puertas",
+        "Vidrios",
+        "Faroles"
+      ]
+    },
+    {
+      "id": "inyeccion-diesel",
+      "title": "Inyección Diesel",
+      "description": "Especialistas en sistemas Common Rail.",
+      "image": "/images/categories/diesel.webp",
+      "items": [
+        "Inyectores",
+        "Bombas Inyectoras",
+        "Turbos",
+        "Kit Filtros Multimarca",
+        "Filtros Combustible",
+        "Filtro Decantador"
+      ]
+    },
+    {
+      "id": "baterias",
+      "title": "Baterías",
+      "description": "Americanas, Coreanas y Alta Gama.",
+      "image": "/images/categories/baterias.webp",
+      "items": [
+        "Americanas (Jeep, Dodge, Ram)",
+        "Coreanas (SsangYong, Chery)",
+        "Marcas Alta Gama",
+        "Baterías de Gel",
+        "Baterías Solares",
+        "Amperaje 26 a 225"
+      ]
+    },
+    {
+      "id": "accesorios",
+      "title": "Accesorios 4x4",
+      "description": "Equipamiento para camionetas y off-road.",
+      "image": "/images/categories/accesorios.webp",
+      "items": [
+        "Lonas Marítimas",
+        "Tapas Retráctil",
+        "Barras Antivuelco",
+        "Cúpulas",
+        "Pisaderas",
+        "Parrillas",
+        "Porta Equipaje",
+        "Kit de Arrastre",
+        "Equipamiento Minero"
+      ]
+    }
+  ]
+}
