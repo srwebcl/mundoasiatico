@@ -10,8 +10,24 @@ export const Navbar = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState({ brands: [], categories: [], products: [] });
     const { openCart, cart } = useShop();
+    const searchRef = React.useRef(null); // Ref for click outside
 
     const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
+
+    // Close search on click outside
+    React.useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (searchRef.current && !searchRef.current.contains(event.target)) {
+                setSearchQuery(''); // Clear query to close results
+                // Or set a separate isOpen state if we wanted to keep the query
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     const handleSearch = (e) => {
         const query = e.target.value;
@@ -66,7 +82,7 @@ export const Navbar = () => {
                     </Link>
 
                     {/* Search Bar - Center - Large and Functional */}
-                    <div className="hidden md:flex flex-1 max-w-2xl relative z-50">
+                    <div className="hidden md:flex flex-1 max-w-2xl relative z-50" ref={searchRef}>
                         <div className="relative w-full group">
                             <input
                                 type="text"
@@ -78,7 +94,7 @@ export const Navbar = () => {
                             <Search className="absolute left-4 top-3.5 w-5 h-5 text-zinc-400 group-hover:text-red-500 transition-colors" />
 
                             {/* Live Results Dropdown */}
-                            {(searchResults.brands.length > 0 || searchResults.categories.length > 0 || searchResults.products.length > 0) && (
+                            {(searchQuery.length >= 2 && (searchResults.brands.length > 0 || searchResults.categories.length > 0 || searchResults.products.length > 0)) && (
                                 <div className="absolute top-full left-0 w-full mt-2 bg-white rounded-2xl shadow-2xl border border-zinc-100 overflow-hidden">
                                     <div className="max-h-[70vh] overflow-y-auto py-2">
 

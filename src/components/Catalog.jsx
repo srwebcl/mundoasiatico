@@ -16,27 +16,52 @@ const Catalog = () => {
     const [selectedModel, setSelectedModel] = useState('all'); // New State for Model
     const [priceRange, setPriceRange] = useState([0, 200000]);
     const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
-    const { addToCart, isWholesale } = useShop(); // isWholesale was missing from the provided snippet, added it back.
+
+    // Pagination State
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 12;
+
+    const { addToCart, isWholesale } = useShop();
 
     // Effect to update state if URL params change
     useEffect(() => {
         if (brandParam) setSelectedBrand(brandParam);
         if (categoryParam) setSelectedCategory(categoryParam);
+        setCurrentPage(1); // Reset page on URL param change
     }, [brandParam, categoryParam]);
 
     // Reset model when brand changes
     const handleBrandChange = (e) => {
         setSelectedBrand(e.target.value);
         setSelectedModel('all');
+        setCurrentPage(1); // Reset page
+    };
+
+    // Handle filter changes
+    const handleCategoryChange = (catId) => {
+        setSelectedCategory(catId);
+        setCurrentPage(1);
     };
 
     const filteredProducts = PRODUCTOS_BASE.filter(product => {
         const matchCategory = selectedCategory === 'all' || product.categoria === selectedCategory;
         const matchBrand = selectedBrand === 'all' || product.marca.toLowerCase() === selectedBrand.toLowerCase();
-        const matchModel = selectedModel === 'all' || product.modelo.toLowerCase() === selectedModel.toLowerCase(); // Filter by model
+        const matchModel = selectedModel === 'all' || product.modelo.toLowerCase() === selectedModel.toLowerCase();
         const matchPrice = product.precio >= priceRange[0] && product.precio <= priceRange[1];
         return matchCategory && matchBrand && matchModel && matchPrice;
     });
+
+    // Pagination Logic
+    const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+    const currentProducts = filteredProducts.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+        window.scrollTo({ top: 300, behavior: 'smooth' });
+    };
 
     return (
         <div className="bg-white min-h-screen pb-20">
@@ -53,18 +78,32 @@ const Catalog = () => {
                     {/* Gradient Overlay & Content */}
                     <div className="relative z-10 w-full h-full bg-black/50 backdrop-blur-[2px] flex flex-col justify-center items-center px-4 text-center">
                         <span className="text-white/90 font-bold tracking-[0.2em] text-xs md:text-sm uppercase mb-2 animate-in fade-in slide-in-from-bottom duration-700">
-                            {selectedCategory === 'all' ? 'Mundo Asiático' : 'Categoría'}
+                            {selectedBrand !== 'all' && selectedCategory !== 'all'
+                                ? `Repuestos ${selectedBrand}`
+                                : selectedBrand !== 'all'
+                                    ? 'Marca'
+                                    : selectedCategory !== 'all'
+                                        ? 'Categoría'
+                                        : 'Mundo Asiático'}
                         </span>
                         <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-white italic tracking-tighter uppercase leading-none pb-2 animate-in fade-in slide-in-from-bottom duration-700 delay-100 drop-shadow-2xl">
-                            {selectedCategory === 'all' ? (
+                            {selectedBrand !== 'all' && selectedCategory !== 'all' ? (
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-400 block whitespace-nowrap pr-8 pb-4 -mb-4">
+                                    {CATEGORIAS.find(c => c.id === selectedCategory)?.name || selectedCategory}
+                                </span>
+                            ) : selectedBrand !== 'all' ? (
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-400 block whitespace-nowrap pr-8 pb-4 -mb-4">
+                                    {selectedBrand}
+                                </span>
+                            ) : selectedCategory !== 'all' ? (
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-400 block whitespace-nowrap pr-8 pb-4 -mb-4">
+                                    {CATEGORIAS.find(c => c.id === selectedCategory)?.name || selectedCategory}
+                                </span>
+                            ) : (
                                 <>
                                     Catálogo de <br className="md:hidden" />
                                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-400 md:ml-4 block md:inline pr-2 pb-2 -mb-2">Repuestos</span>
                                 </>
-                            ) : (
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-400 block whitespace-nowrap pr-8 pb-4 -mb-4">
-                                    {CATEGORIAS.find(c => c.id === selectedCategory)?.name || selectedCategory}
-                                </span>
                             )}
                         </h1>
                     </div>
@@ -107,7 +146,7 @@ const Catalog = () => {
                                     <label className="text-xs font-bold text-zinc-500 mb-1 block">Modelo</label>
                                     <select
                                         value={selectedModel}
-                                        onChange={(e) => setSelectedModel(e.target.value)}
+                                        onChange={(e) => { setSelectedModel(e.target.value); setCurrentPage(1); }}
                                         className="w-full p-2 border border-zinc-200 rounded-lg text-sm focus:border-red-600 focus:outline-none disabled:bg-zinc-100 disabled:text-zinc-400"
                                         disabled={selectedBrand === 'all'}
                                     >
@@ -125,7 +164,7 @@ const Catalog = () => {
                             <h3 className="font-bold text-zinc-900 mb-4 text-sm uppercase tracking-wider">Categorías</h3>
                             <div className="space-y-2">
                                 <button
-                                    onClick={() => setSelectedCategory('all')}
+                                    onClick={() => handleCategoryChange('all')}
                                     className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors ${selectedCategory === 'all' ? 'bg-red-600 text-white' : 'hover:bg-zinc-50 text-zinc-600'}`}
                                 >
                                     Todas
@@ -133,7 +172,7 @@ const Catalog = () => {
                                 {CATEGORIAS.map(cat => (
                                     <button
                                         key={cat.id}
-                                        onClick={() => setSelectedCategory(cat.id)}
+                                        onClick={() => handleCategoryChange(cat.id)}
                                         className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-between ${selectedCategory === cat.id ? 'bg-red-600 text-white' : 'hover:bg-zinc-50 text-zinc-600'}`}
                                     >
                                         <span>{cat.name}</span>
@@ -152,7 +191,7 @@ const Catalog = () => {
                                 max="200000"
                                 step="5000"
                                 value={priceRange[1]}
-                                onChange={(e) => setPriceRange([0, parseInt(e.target.value)])}
+                                onChange={(e) => { setPriceRange([0, parseInt(e.target.value)]); setCurrentPage(1); }}
                                 className="w-full accent-red-600 cursor-pointer"
                             />
                             <div className="flex justify-between text-xs font-bold text-zinc-500 mt-2">
@@ -168,11 +207,13 @@ const Catalog = () => {
                             <h2 className="text-2xl font-bold">
                                 {selectedCategory === 'all' ? 'Catálogo Completo' : CATEGORIAS.find(c => c.id === selectedCategory)?.name}
                             </h2>
-                            <span className="text-zinc-500 text-sm">{filteredProducts.length} productos encontrados</span>
+                            <span className="text-zinc-500 text-sm">
+                                {filteredProducts.length} productos • {currentPage} de {totalPages}
+                            </span>
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {filteredProducts.map(product => {
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                            {currentProducts.map(product => {
                                 const price = isWholesale ? product.precio * 0.8 : product.precio;
                                 return (
                                     <div key={product.id} className="bg-white rounded-lg border border-zinc-200 shadow-sm hover:shadow-xl transition-shadow overflow-hidden group relative">
@@ -214,12 +255,58 @@ const Catalog = () => {
                             })}
                         </div>
 
-                        {filteredProducts.length === 0 && (
+                        {filteredProducts.length === 0 ? (
                             <div className="text-center py-20 bg-zinc-50 rounded-lg">
                                 <Filter className="mx-auto text-zinc-300 mb-4" size={48} />
                                 <p className="text-zinc-500">No encontramos repuestos con estos filtros.</p>
-                                <button onClick={() => { setSelectedBrand('all'); setSelectedCategory('all'); }} className="text-blue-600 font-bold mt-2">Limpiar filtros</button>
+                                <button onClick={() => { setSelectedBrand('all'); setSelectedCategory('all'); setCurrentPage(1); }} className="text-blue-600 font-bold mt-2">Limpiar filtros</button>
                             </div>
+                        ) : (
+                            /* Pagination Controls */
+                            totalPages > 1 && (
+                                <div className="flex justify-center items-center gap-2 mt-8 mb-12">
+                                    <button
+                                        onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+                                        disabled={currentPage === 1}
+                                        className="px-4 py-2 rounded-lg border border-zinc-200 text-zinc-600 hover:bg-zinc-100 disabled:opacity-50 disabled:cursor-not-allowed font-bold"
+                                    >
+                                        Anterior
+                                    </button>
+
+                                    <div className="flex gap-1">
+                                        {[...Array(totalPages)].map((_, i) => {
+                                            const page = i + 1;
+                                            // Show first, last, current, and surrounding pages logic could be added here for large sets
+                                            // For now, simple list
+                                            if (totalPages > 7 && Math.abs(currentPage - page) > 2 && page !== 1 && page !== totalPages) {
+                                                if (Math.abs(currentPage - page) === 3) return <span key={page} className="px-2">...</span>;
+                                                return null;
+                                            }
+
+                                            return (
+                                                <button
+                                                    key={page}
+                                                    onClick={() => handlePageChange(page)}
+                                                    className={`w-10 h-10 rounded-lg font-bold transition-colors ${currentPage === page
+                                                            ? 'bg-red-600 text-white'
+                                                            : 'bg-white text-zinc-600 hover:bg-zinc-100 border border-zinc-200'
+                                                        }`}
+                                                >
+                                                    {page}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+
+                                    <button
+                                        onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+                                        disabled={currentPage === totalPages}
+                                        className="px-4 py-2 rounded-lg border border-zinc-200 text-zinc-600 hover:bg-zinc-100 disabled:opacity-50 disabled:cursor-not-allowed font-bold"
+                                    >
+                                        Siguiente
+                                    </button>
+                                </div>
+                            )
                         )}
                     </main>
                 </div>
