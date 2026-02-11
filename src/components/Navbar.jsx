@@ -177,34 +177,50 @@ export const Navbar = () => {
                         </Link>
 
                         {/* Mega Menu Triggers */}
-                        <div className="relative group cursor-pointer h-full flex items-center">
+                        {/* Mega Menu Triggers - Removed 'relative' for full-width dropdown */}
+                        <div className="group cursor-pointer h-full flex items-center">
                             <span className="flex items-center gap-1 text-sm font-bold text-zinc-700 group-hover:text-red-600 transition-colors px-2">
                                 CATÁLOGO <ChevronDown size={14} />
                             </span>
-                            {/* Mega Menu Dropdown */}
-                            <div className="absolute top-full left-0 mt-0 w-[600px] bg-white border border-zinc-100 rounded-b-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all transform translate-y-2 group-hover:translate-y-0 p-6 z-40">
-                                <div className="grid grid-cols-2 gap-4">
-                                    {CATEGORIAS.map(cat => (
-                                        <Link key={cat.id} href={`/catalogo?categoria=${cat.id}`} className="flex items-center gap-3 p-2 hover:bg-zinc-50 rounded-lg group/item">
-                                            <span className="text-xl group-hover/item:scale-110 transition-transform">{cat.icon}</span>
-                                            <span className="font-medium text-sm text-zinc-700 group-hover/item:text-red-600">{cat.name}</span>
-                                        </Link>
-                                    ))}
+                            {/* Mega Menu Dropdown - Full Width */}
+                            <div className="absolute top-full left-0 mt-0 w-full bg-white border-b border-zinc-200 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all transform translate-y-2 group-hover:translate-y-0 z-40">
+                                <div className="container mx-auto px-4 md:px-6 py-8">
+                                    <div className="grid grid-cols-5 gap-6">
+                                        {CATEGORIAS.map(cat => (
+                                            <Link key={cat.id} href={`/catalogo?categoria=${cat.id}`} className="group/item block relative overflow-hidden rounded-xl aspect-[4/3] shadow-sm hover:shadow-md transition-all">
+                                                <img
+                                                    src={cat.image}
+                                                    alt={cat.name}
+                                                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover/item:scale-110"
+                                                />
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                                                <div className="absolute bottom-0 left-0 w-full p-4">
+                                                    <div className="flex items-center gap-2 text-white mb-1">
+                                                        <span className="text-xl">{cat.icon}</span>
+                                                        <span className="font-bold text-sm md:text-base leading-tight group-hover/item:text-red-400 transition-colors">{cat.name}</span>
+                                                    </div>
+                                                </div>
+                                            </Link>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="relative group cursor-pointer h-full flex items-center">
+                        <div className="group cursor-pointer h-full flex items-center">
                             <span className="flex items-center gap-1 text-sm font-bold text-zinc-700 group-hover:text-red-600 transition-colors px-2">
                                 MARCAS <ChevronDown size={14} />
                             </span>
-                            <div className="absolute top-full left-0 mt-0 w-[600px] bg-white border border-zinc-100 rounded-b-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all transform translate-y-2 group-hover:translate-y-0 p-6 z-40">
-                                <div className="grid grid-cols-4 gap-2">
-                                    {MARCAS.map(marca => (
-                                        <Link key={marca} href={`/catalogo?marca=${marca}`} className="block px-3 py-2 hover:bg-zinc-50 rounded-lg text-sm font-medium text-zinc-600 hover:text-zinc-900">
-                                            {marca}
-                                        </Link>
-                                    ))}
+                            <div className="absolute top-full left-0 mt-0 w-full bg-white border-b border-zinc-200 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all transform translate-y-2 group-hover:translate-y-0 z-40">
+                                <div className="container mx-auto px-4 md:px-6 py-8">
+                                    <h3 className="font-bold text-zinc-400 text-xs uppercase tracking-wider mb-4">Todas nuestras marcas</h3>
+                                    <div className="grid grid-cols-6 gap-y-3 gap-x-8">
+                                        {MARCAS.map(marca => (
+                                            <Link key={marca} href={`/catalogo?marca=${marca}`} className="block py-2 px-3 hover:bg-zinc-50 rounded-lg text-sm font-medium text-zinc-600 hover:text-red-600 hover:pl-4 transition-all border-l-2 border-transparent hover:border-red-600">
+                                                {marca}
+                                            </Link>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
                         </div>
