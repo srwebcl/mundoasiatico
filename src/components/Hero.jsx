@@ -1,104 +1,126 @@
 'use client';
 import React from 'react';
-import { useRouter } from 'next/navigation';
-import { ArrowRight, MessageCircle } from 'lucide-react';
+import Link from 'next/link';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Autoplay, EffectFade } from 'swiper/modules';
+import { ArrowRight } from 'lucide-react';
+
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import 'swiper/css/effect-fade';
+
+const SLIDES = [
+    {
+        id: 1,
+        image: '/images/banner-brakes.png',
+        subtitle: 'SEGURIDAD TOTAL',
+        title: 'FRENOS DE ALTA GAMA',
+        description: 'Pastillas, discos y calipers para Chery, MG y Maxus. Garantiza tu frenado con repuestos certificados.',
+        ctaText: 'VER FRENOS',
+        ctaLink: '/catalogo?categoria=frenos',
+        align: 'left'
+    },
+    {
+        id: 2,
+        image: '/images/banner-maintenance.png',
+        subtitle: 'MANTENIMIENTO PREVENTIVO',
+        title: 'MOTOR Y FILTROS',
+        description: 'Mantén tu motor rugiendo. Kits de afinamiento completos para todas las marcas chinas.',
+        ctaText: 'VER KIT MANTENCIÓN',
+        ctaLink: '/catalogo?categoria=filtros',
+        align: 'center'
+    },
+    {
+        id: 3,
+        image: '/banner.jpeg', // Fallback to existing banner if available
+        subtitle: 'REPUESTOS ORIGINALES',
+        title: 'MUNDO ASIÁTICO',
+        description: 'El stock más grande de Chile en repuestos para vehículos chinos. Expertos a tu servicio.',
+        ctaText: 'BUSCAR REPUESTO',
+        ctaLink: '/catalogo',
+        align: 'left'
+    }
+];
 
 export const Hero = () => {
-    const router = useRouter();
-
     return (
-        <div className="relative bg-[#0a0a0a] text-white overflow-hidden min-h-[450px] lg:min-h-[500px] flex items-center selection:bg-red-500 selection:text-white group">
-
-            {/* --- BACKGROUND LAYERS --- */}
-
-            {/* 1. Main Background Image with Parallax-like scale */}
-            <div className="absolute inset-0 z-0 overflow-hidden">
-                <img
-                    src="/banner.jpeg"
-                    alt="Background"
-                    className="w-full h-full object-cover opacity-50 scale-110 group-hover:scale-100 transition-transform duration-[2s] ease-out will-change-transform"
-                />
-            </div>
-
-            {/* 2. Gradient Overlays for Spotlight Effect */}
-            <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent z-10"></div>
-            <div className="absolute -top-1/2 -left-1/4 w-[1000px] h-[1000px] bg-red-600/20 rounded-full blur-[120px] mix-blend-screen opacity-40 animate-pulse"></div>
-            <div className="absolute -bottom-1/2 -right-1/4 w-[800px] h-[800px] bg-blue-600/10 rounded-full blur-[100px] mix-blend-screen opacity-30"></div>
-
-            {/* --- CONTENT --- */}
-            <div className="container mx-auto px-4 relative z-20 flex flex-col lg:flex-row items-center gap-8 lg:gap-12 py-12 lg:py-16">
-
-                {/* Left Column: Text & CTA */}
-                <div className="w-full lg:w-3/5 space-y-6 animate-in slide-in-from-left duration-1000 ease-out fill-mode-backwards">
-
-                    <div>
-                        <div className="inline-flex items-center gap-2 bg-white/5 backdrop-blur-md border border-white/10 text-[10px] font-bold px-3 py-1 rounded-full mb-4 shadow-2xl shadow-red-900/20 ring-1 ring-white/20 hover:bg-white/10 transition-colors">
-                            <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping"></span>
-                            <span className="text-red-400 tracking-wider uppercase">Nueva Plataforma 2026</span>
+        <section className="relative w-full h-[500px] md:h-[600px] bg-zinc-900 overflow-hidden">
+            <Swiper
+                modules={[Navigation, Pagination, Autoplay, EffectFade]}
+                effect={'fade'}
+                speed={1000}
+                autoplay={{
+                    delay: 5000,
+                    disableOnInteraction: false,
+                }}
+                navigation={true}
+                pagination={{ clickable: true }}
+                loop={true}
+                className="w-full h-full group"
+            >
+                {SLIDES.map((slide) => (
+                    <SwiperSlide key={slide.id} className="relative w-full h-full">
+                        {/* Background Image */}
+                        <div className="absolute inset-0 w-full h-full">
+                            <img
+                                src={slide.image}
+                                alt={slide.title}
+                                className="w-full h-full object-cover"
+                            />
+                            {/* Gradient Overlay */}
+                            <div className={`absolute inset-0 bg-gradient-to-r ${slide.align === 'center' ? 'from-black/70 via-black/50 to-black/70' : 'from-black/80 via-black/40 to-transparent'}`}></div>
                         </div>
 
-                        <h1 className="text-4xl md:text-6xl lg:text-7xl font-black italic leading-[0.9] tracking-tighter drop-shadow-xl">
-                            TU EXPERTO EN <br />
-                            <span className="relative inline-block text-red-600 animate-shine pb-1 whitespace-nowrap">
-                                REPUESTOS <span className="text-white drop-shadow-2xl">CHINOS</span>
-                                <span className="absolute inset-0 bg-gradient-to-r from-red-500 via-red-600 to-red-500 blur-2xl opacity-50 -z-10"></span>
-                            </span>
-                        </h1>
-                    </div>
+                        {/* Content Overlay */}
+                        <div className="relative z-10 container mx-auto px-4 h-full flex flex-col justify-center">
+                            <div className={`max-w-xl ${slide.align === 'center' ? 'mx-auto text-center' : ''} space-y-6`}>
+                                <div className="space-y-2 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-100">
+                                    <span className="inline-block py-1 px-3 rounded-full bg-red-600/90 text-white text-xs md:text-sm font-bold tracking-wider uppercase backdrop-blur-sm">
+                                        {slide.subtitle}
+                                    </span>
+                                    <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white italic tracking-tighter leading-none">
+                                        {slide.title}
+                                    </h1>
+                                </div>
 
-                    <p className="text-zinc-300 text-base md:text-xl max-w-xl font-light leading-relaxed border-l-4 border-red-600 pl-4">
-                        La red más grande de Chile. Repuestos certificados para
-                        <strong className="text-white font-semibold"> Chery, MG, JAC, Great Wall</strong> y Haval.
-                    </p>
+                                <p className="text-zinc-200 text-lg md:text-xl font-medium leading-relaxed max-w-lg animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
+                                    {slide.description}
+                                </p>
 
-                    <div className="flex flex-col sm:flex-row gap-4 pt-2">
-                        <button
-                            onClick={() => router.push('/catalogo')}
-                            className="group relative px-6 py-4 rounded-full bg-red-600 text-white font-bold text-base overflow-hidden shadow-2xl shadow-red-600/40 hover:shadow-red-600/60 transition-all hover:-translate-y-1"
-                        >
-                            <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
-                            <span className="relative flex items-center gap-2">
-                                VER CATÁLOGO <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-                            </span>
-                        </button>
-
-                        <button className="px-6 py-4 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm text-white font-bold text-base hover:bg-white/10 transition-all hover:-translate-y-1 flex items-center gap-2">
-                            <MessageCircle size={20} className="text-green-500" />
-                            COTIZAR WHATSAPP
-                        </button>
-                    </div>
-                </div>
-
-                {/* Right Column: Hero Image (Floating Car) */}
-                <div className="w-full lg:w-2/5 flex justify-center relative perspective-1000">
-                    {/* Glow behind car */}
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-radial-gradient from-red-600/30 to-transparent blur-3xl rounded-full"></div>
-
-                    <div className="relative animate-float z-10 w-full max-w-[380px] lg:max-w-[450px]">
-                        {/* Reflection/Glare on car visual */}
-                        <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 blur-3xl rounded-full z-20 mix-blend-overlay"></div>
-
-                        <img
-                            src="/camioneta-great-wall.webp"
-                            alt="Camioneta Great Wall"
-                            className="w-full h-auto drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)] filter contrast-125 saturate-110 transform rotate-1 hover:rotate-0 transition-transform duration-500"
-                        />
-
-                        {/* Floating Glass Card */}
-                        <div className="absolute -bottom-4 -left-4 bg-white/10 backdrop-blur-xl border border-white/20 p-3 rounded-2xl shadow-2xl z-30 max-w-[180px] animate-in slide-in-from-bottom duration-1000 delay-300">
-                            <div className="flex items-center gap-2 mb-1">
-                                <span className="flex h-2 w-2 relative">
-                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-                                </span>
-                                <span className="text-[9px] text-white/80 font-bold tracking-widest uppercase">Oferta Flash</span>
+                                <div className={`flex flex-wrap gap-4 pt-4 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300 ${slide.align === 'center' ? 'justify-center' : 'justify-start'}`}>
+                                    <Link
+                                        href={slide.ctaLink}
+                                        className="bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-full font-bold flex items-center gap-2 group/btn transition-all shadow-lg hover:shadow-red-600/30"
+                                    >
+                                        {slide.ctaText} <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
+                                    </Link>
+                                </div>
                             </div>
-                            <div className="text-white font-bold text-base leading-tight">Kit Embrague Chery</div>
-                            <div className="text-red-400 font-bold text-xs mt-0.5">Desde $89.900</div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+                    </SwiperSlide>
+                ))}
+
+                <style jsx global>{`
+                    .swiper-button-next, .swiper-button-prev {
+                        color: white !important;
+                        opacity: 0;
+                        transition: opacity 0.3s;
+                    }
+                    .swiper:hover .swiper-button-next, .swiper:hover .swiper-button-prev {
+                        opacity: 1;
+                    }
+                    .swiper-pagination-bullet {
+                        background: white !important;
+                        opacity: 0.5;
+                    }
+                    .swiper-pagination-bullet-active {
+                        opacity: 1;
+                        background: #dc2626 !important; /* red-600 */
+                    }
+                `}</style>
+            </Swiper>
+        </section>
     );
 };

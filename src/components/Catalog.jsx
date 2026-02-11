@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { Search, Filter, ChevronDown, ChevronRight, X } from 'lucide-react';
+import { Search, Filter, ChevronDown, ChevronRight, X, ShoppingCart } from 'lucide-react';
+import Link from 'next/link';
 import { PRODUCTOS_BASE, CATEGORIAS, MARCAS, MODELOS } from '@/data/mockData';
 import { useShop } from '@/context/ShopContext';
 import { useSearchParams, useRouter } from 'next/navigation';
@@ -39,13 +40,34 @@ const Catalog = () => {
 
     return (
         <div className="bg-white min-h-screen pb-20">
-            {/* Header */}
-            <div className="bg-zinc-50 border-b border-zinc-100 py-8 md:py-12">
-                <div className="container mx-auto px-4 md:px-6">
-                    <h1 className="text-3xl md:text-4xl font-black text-zinc-900 mb-2 italic tracking-tighter uppercase">
-                        Catálogo de Repuestos
-                    </h1>
-                    <p className="text-zinc-500">Encuentra el repuesto exacto para tu vehículo.</p>
+            {/* Header / Banner */}
+            <div className="container mx-auto px-4 mt-8 mb-8">
+                <div className="relative w-full h-auto min-h-[200px] md:h-64 rounded-3xl overflow-hidden shadow-2xl flex items-center bg-zinc-900 group">
+                    {/* Background Image */}
+                    <img
+                        src="/images/catalog-banner-v2.png"
+                        alt="Catálogo Repuestos"
+                        className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700"
+                    />
+
+                    {/* Gradient Overlay & Content */}
+                    <div className="relative z-10 w-full h-full bg-black/50 backdrop-blur-[2px] flex flex-col justify-center items-center px-4 text-center">
+                        <span className="text-white/90 font-bold tracking-[0.2em] text-xs md:text-sm uppercase mb-2 animate-in fade-in slide-in-from-bottom duration-700">
+                            {selectedCategory === 'all' ? 'Mundo Asiático' : 'Categoría'}
+                        </span>
+                        <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-white italic tracking-tighter uppercase leading-none pb-2 animate-in fade-in slide-in-from-bottom duration-700 delay-100 drop-shadow-2xl">
+                            {selectedCategory === 'all' ? (
+                                <>
+                                    Catálogo de <br className="md:hidden" />
+                                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-400 md:ml-4 block md:inline pr-2 pb-2 -mb-2">Repuestos</span>
+                                </>
+                            ) : (
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-400 block whitespace-nowrap pr-8 pb-4 -mb-4">
+                                    {CATEGORIAS.find(c => c.id === selectedCategory)?.name || selectedCategory}
+                                </span>
+                            )}
+                        </h1>
+                    </div>
                 </div>
             </div>
 
@@ -153,34 +175,40 @@ const Catalog = () => {
                             {filteredProducts.map(product => {
                                 const price = isWholesale ? product.precio * 0.8 : product.precio;
                                 return (
-                                    <div key={product.id} className="bg-white rounded-lg border border-zinc-200 shadow-sm hover:shadow-xl transition-shadow overflow-hidden group">
-                                        <div className="h-40 bg-zinc-100 flex items-center justify-center text-4xl group-hover:scale-105 transition-transform duration-300">
-                                            {product.img}
-                                        </div>
-                                        <div className="p-4">
-                                            <div className="text-xs font-bold text-zinc-400 mb-1 uppercase">{product.marca}</div>
-                                            <h3 className="font-bold text-zinc-900 leading-tight mb-2 h-10 overflow-hidden">{product.nombre}</h3>
-                                            <div className="text-xs text-zinc-500 mb-4">SKU: {product.sku}</div>
-
-                                            <div className="flex items-end justify-between">
-                                                <div>
-                                                    {isWholesale && (
-                                                        <div className="text-xs text-zinc-400 line-through">${product.precio.toLocaleString()}</div>
-                                                    )}
-                                                    <div className="text-xl font-bold text-red-600">
-                                                        ${price.toLocaleString()}
-                                                    </div>
-                                                    {isWholesale && <span className="text-[10px] text-blue-600 font-bold">PRECIO MAYORISTA</span>}
-                                                </div>
-                                                <button
-                                                    onClick={() => addToCart(product)}
-                                                    className="bg-zinc-900 text-white p-2 rounded-full hover:bg-red-600 transition-colors"
-                                                >
-                                                    {/* Re-import ShoppingCart or use a different icon if needed. Assuming ShoppingCart is available as it was used before. Wait, I removed ShoppingCart from imports in step 188. I need to re-add it or use Search/Car/etc. I will add ShoppingCart to imports in next step if missing. For now, let's assume it might error if not added. I should check imports. Step 188 removed it. I will add it back in imports first or in this same call if possible. Can't edit imports here easily without huge context. I will fix imports separately. */}
-                                                    <Search size={18} />
-                                                </button>
+                                    <div key={product.id} className="bg-white rounded-lg border border-zinc-200 shadow-sm hover:shadow-xl transition-shadow overflow-hidden group relative">
+                                        <Link href={`/producto/${product.id}`} className="block">
+                                            <div className="h-40 bg-zinc-100 flex items-center justify-center text-4xl group-hover:scale-105 transition-transform duration-300">
+                                                {product.img}
                                             </div>
-                                        </div>
+                                            <div className="p-4">
+                                                <div className="text-xs font-bold text-zinc-400 mb-1 uppercase">{product.marca}</div>
+                                                <h3 className="font-bold text-zinc-900 leading-tight mb-2 h-10 overflow-hidden">{product.nombre}</h3>
+                                                <div className="text-xs text-zinc-500 mb-4">SKU: {product.sku}</div>
+
+                                                <div className="flex items-end justify-between">
+                                                    <div>
+                                                        {isWholesale && (
+                                                            <div className="text-xs text-zinc-400 line-through">${product.precio.toLocaleString()}</div>
+                                                        )}
+                                                        <div className="text-xl font-bold text-red-600">
+                                                            ${price.toLocaleString()}
+                                                        </div>
+                                                        {isWholesale && <span className="text-[10px] text-blue-600 font-bold">PRECIO MAYORISTA</span>}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </Link>
+                                        <button
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                e.stopPropagation();
+                                                addToCart(product);
+                                            }}
+                                            className="absolute bottom-4 right-4 bg-zinc-900 text-white p-2.5 rounded-full hover:bg-red-600 transition-colors shadow-lg z-10"
+                                            title="Agregar al carro"
+                                        >
+                                            <ShoppingCart size={18} />
+                                        </button>
                                     </div>
                                 );
                             })}

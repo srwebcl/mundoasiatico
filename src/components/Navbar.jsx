@@ -232,43 +232,143 @@ export const Navbar = () => {
                 </div>
             </div>
 
-            {/* Mobile Menu */}
+            {/* Mobile Menu - Full Screen Overlay */}
             {
                 isMenuOpen && (
-                    <div className="md:hidden border-t border-zinc-100 bg-white absolute w-full left-0 top-full shadow-xl max-h-[80vh] overflow-y-auto">
-                        <div className="p-4 space-y-4">
-                            <Link href="/" onClick={() => setIsMenuOpen(false)} className="block p-3 rounded-lg hover:bg-zinc-50 font-bold text-zinc-900 border-l-4 border-transparent hover:border-red-600 transition-all">INICIO</Link>
-
-                            <div className="space-y-2">
-                                <p className="px-3 font-bold text-zinc-400 text-xs uppercase tracking-wider">Categorías</p>
-                                <div className="grid grid-cols-2 gap-2 px-3">
-                                    {CATEGORIAS.map(cat => (
-                                        <Link
-                                            key={cat.id}
-                                            href={`/catalogo?categoria=${cat.id}`}
-                                            onClick={() => setIsMenuOpen(false)}
-                                            className="text-sm p-2 bg-zinc-50 rounded text-zinc-700 flex items-center gap-2"
-                                        >
-                                            <span>{cat.icon}</span> {cat.name}
-                                        </Link>
-                                    ))}
+                    <div className="md:hidden fixed inset-0 z-[60] bg-white overflow-hidden flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-200">
+                        {/* Mobile Header */}
+                        <div className="flex items-center justify-between p-4 border-b border-zinc-100 bg-white shrink-0">
+                            <Link href="/" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-2">
+                                <div className="bg-red-600 p-1.5 rounded-lg">
+                                    <Car className="text-white w-5 h-5" />
                                 </div>
+                                <span className="font-black text-lg tracking-tighter italic">MUNDO<span className="text-red-600">ASIÁTICO</span></span>
+                            </Link>
+                            <button
+                                onClick={() => setIsMenuOpen(false)}
+                                className="p-2 bg-zinc-100 rounded-full hover:bg-zinc-200 transition-colors"
+                            >
+                                <X className="w-6 h-6 text-zinc-800" />
+                            </button>
+                        </div>
+
+                        {/* Mobile Content - Scrollable */}
+                        <div className="flex-1 overflow-y-auto bg-zinc-50">
+
+                            {/* Mobile Search Section */}
+                            <div className="sticky top-0 bg-white p-4 border-b border-zinc-100 shadow-sm z-10">
+                                <div className="relative">
+                                    <input
+                                        type="text"
+                                        value={searchQuery}
+                                        onChange={handleSearch}
+                                        placeholder="Buscar repuesto..."
+                                        className="w-full pl-10 pr-4 py-3 bg-zinc-100 border-none rounded-xl text-base focus:ring-2 focus:ring-red-600 outline-none transition-all"
+                                    />
+                                    <Search className="absolute left-3 top-3.5 w-5 h-5 text-zinc-400" />
+                                </div>
+
+                                {/* Live Results Mobile */}
+                                {(searchResults.brands.length > 0 || searchResults.categories.length > 0 || searchResults.products.length > 0) && (
+                                    <div className="mt-4 bg-white rounded-xl border border-zinc-100 shadow-lg overflow-hidden">
+                                        {searchResults.brands.length > 0 && (
+                                            <div className="border-b border-zinc-50">
+                                                <div className="px-4 py-2 bg-zinc-50 text-[10px] font-bold text-zinc-500 uppercase">Marcas</div>
+                                                {searchResults.brands.map(brand => (
+                                                    <Link key={brand} href={`/catalogo?marca=${brand}`} onClick={() => setIsMenuOpen(false)} className="block px-4 py-3 text-sm font-medium text-zinc-800 border-b border-zinc-50 last:border-0">
+                                                        {brand}
+                                                    </Link>
+                                                ))}
+                                            </div>
+                                        )}
+                                        {searchResults.categories.length > 0 && (
+                                            <div className="border-b border-zinc-50">
+                                                <div className="px-4 py-2 bg-zinc-50 text-[10px] font-bold text-zinc-500 uppercase">Categorías</div>
+                                                {searchResults.categories.map(cat => (
+                                                    <Link key={cat.id} href={`/catalogo?categoria=${cat.id}`} onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-zinc-800 border-b border-zinc-50 last:border-0">
+                                                        <span>{cat.icon}</span> {cat.name}
+                                                    </Link>
+                                                ))}
+                                            </div>
+                                        )}
+                                        {searchResults.products.length > 0 && (
+                                            <div>
+                                                <div className="px-4 py-2 bg-zinc-50 text-[10px] font-bold text-zinc-500 uppercase">Productos</div>
+                                                {searchResults.products.map(prod => (
+                                                    <Link key={prod.id} href="/catalogo" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 border-b border-zinc-50 last:border-0 active:bg-zinc-50">
+                                                        <div className="w-8 h-8 bg-zinc-100 rounded flex items-center justify-center text-lg shrink-0">{prod.img}</div>
+                                                        <div className="flex-1 min-w-0">
+                                                            <p className="text-sm font-bold text-zinc-800 truncate">{prod.nombre}</p>
+                                                            <p className="text-xs text-red-600 font-bold">${prod.precio.toLocaleString()}</p>
+                                                        </div>
+                                                    </Link>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
                             </div>
 
-                            <div className="space-y-2">
-                                <p className="px-3 font-bold text-zinc-400 text-xs uppercase tracking-wider">Marcas</p>
-                                <div className="grid grid-cols-2 gap-2 px-3">
-                                    {MARCAS.map(marca => (
-                                        <Link
-                                            key={marca}
-                                            href={`/catalogo?marca=${marca}`}
-                                            onClick={() => setIsMenuOpen(false)}
-                                            className="text-sm p-2 bg-zinc-50 rounded text-zinc-700 truncate"
-                                        >
-                                            {marca}
-                                        </Link>
-                                    ))}
+                            <div className="p-4 space-y-6 pb-20">
+                                <Link
+                                    href="/"
+                                    onClick={() => setIsMenuOpen(false)}
+                                    className="flex items-center justify-between p-4 bg-white rounded-xl shadow-sm border border-zinc-100 font-bold text-zinc-900 active:scale[0.98] transition-all"
+                                >
+                                    <span>INICIO</span>
+                                    <ChevronDown className="-rotate-90 text-zinc-300" size={16} />
+                                </Link>
+
+                                {/* Mobile Categories Grid */}
+                                <div>
+                                    <div className="flex items-center justify-between mb-3 px-1">
+                                        <h3 className="font-bold text-zinc-800 text-sm">Categorías</h3>
+                                        <Link href="/catalogo" onClick={() => setIsMenuOpen(false)} className="text-xs font-bold text-red-600">Ver todas</Link>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-3">
+                                        {CATEGORIAS.map(cat => (
+                                            <Link
+                                                key={cat.id}
+                                                href={`/catalogo?categoria=${cat.id}`}
+                                                onClick={() => setIsMenuOpen(false)}
+                                                className="bg-white p-3 rounded-xl border border-zinc-100 shadow-sm flex flex-col items-center justify-center gap-2 text-center active:scale-95 transition-transform"
+                                            >
+                                                <span className="text-2xl">{cat.icon}</span>
+                                                <span className="text-xs font-medium text-zinc-700 leading-tight">{cat.name}</span>
+                                            </Link>
+                                        ))}
+                                    </div>
                                 </div>
+
+                                {/* Mobile Brands Grid */}
+                                <div>
+                                    <div className="flex items-center justify-between mb-3 px-1">
+                                        <h3 className="font-bold text-zinc-800 text-sm">Marcas Populares</h3>
+                                    </div>
+                                    <div className="grid grid-cols-3 gap-2">
+                                        {MARCAS.slice(0, 12).map(marca => (
+                                            <Link
+                                                key={marca}
+                                                href={`/catalogo?marca=${marca}`}
+                                                onClick={() => setIsMenuOpen(false)}
+                                                className="bg-white py-2 px-1 rounded-lg border border-zinc-100 shadow-sm text-center text-xs font-medium text-zinc-600 truncate active:bg-zinc-50"
+                                            >
+                                                {marca}
+                                            </Link>
+                                        ))}
+                                        <Link href="/catalogo" onClick={() => setIsMenuOpen(false)} className="bg-red-50 py-2 px-1 rounded-lg border border-red-100 text-center text-xs font-bold text-red-600 flex items-center justify-center">
+                                            Ver más...
+                                        </Link>
+                                    </div>
+                                </div>
+
+                                <Link
+                                    href="/contacto"
+                                    onClick={() => setIsMenuOpen(false)}
+                                    className="flex items-center justify-center p-4 bg-zinc-900 text-white rounded-xl font-bold shadow-lg shadow-zinc-200 mt-4 active:scale-95 transition-transform"
+                                >
+                                    CONTACTAR SOPORTE
+                                </Link>
                             </div>
                         </div>
                     </div>

@@ -49,8 +49,8 @@ export const CATEGORIAS = [
     { id: 'filtros', name: 'Filtros', icon: '💨', image: '/images/categorias/filtros-cat.jpeg' },
     { id: 'frenos', name: 'Frenos', icon: '🛑', image: '/images/categorias/frenos-cat.jpeg' },
     { id: 'inyeccion-diesel', name: 'Inyección Diesel', icon: '⛽', image: '/images/categorias/inyeccion-cat.jpeg' },
-    { id: 'lubricantes', name: 'Lubricantes', icon: '🛢️', image: '/images/categorias/lubricantes-cat.jpeg' },
-    { id: 'accesorios', name: 'Accesorios', icon: '🔧', image: '/images/categorias/accesorios-cat.jpeg' }
+    { id: 'lubricantes', name: 'Lubricantes', icon: '🛢️', image: '/images/categorias/lubricantes-mg.png' },
+    { id: 'accesorios', name: 'Accesorios', icon: '🔧', image: '/images/categorias/plumillas-cat.jpeg' }
 ];
 
 // Sample products based on the CSV files uploaded
