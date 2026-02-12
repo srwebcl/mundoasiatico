@@ -19,6 +19,9 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: "Mundo Asiático | Repuestos Chinos",
   description: "Especialistas en repuestos para vehículos de marcas chinas. Chery, MG, JAC, Great Wall y más.",
+  icons: {
+    icon: '/logo-mundo-asiatico.webp',
+  },
 };
 
 export default function RootLayout({ children }) {

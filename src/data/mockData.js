@@ -2,7 +2,8 @@
 /* --- MOCK DATA BASED ON USER CSV FILES --- */
 
 export const MARCAS = [
-    "BAIC", "Brilliance", "BYD", "Changan", "Chery", "Chevrolet", "DFM", "DFSK", "Dongfeng", "FAW", "Foton", "GAC Gonow", "Geely", "Great Wall", "Hafei", "Haima", "Haval", "JAC", "Jetour", "Jinbei", "JMC", "Karry", "KYC", "Lifan", "Mahindra", "Maxus", "MG", "Omoda", "Suzuki", "Yuejin", "Zotye", "ZX Auto"
+
+    "BAIC", "Brilliance", "BYD", "Changan", "Chery", "Chevrolet", "DFM", "DFSK", "Dongfeng", "FAW", "Foton", "GAC", "GAC Gonow", "Geely", "Great Wall", "Hafei", "Haima", "Haval", "JAC", "Jetour", "Jinbei", "JMC", "Karry", "KYC", "Lifan", "Maxus", "MG", "Omoda", "Yuejin", "Zotye", "ZX Auto"
 ];
 
 export const MODELOS = {
@@ -17,6 +18,7 @@ export const MODELOS = {
     "Dongfeng": ["DF2500 VVT", "DF2900 VVT"],
     "FAW": ["Mamut T80 / V80"],
     "Foton": ["Aumark 613", "Aumark 613 Euro IV", "BJ1027", "K1", "Midi", "Midi Cargo", "Midi Cargo Van", "Midi Cargo 1.5cc", "Midi Truck", "New Midi Truck", "OLN", "Terracota", "TM3", "View"],
+    "GAC": ["GA4", "GS3", "GS4", "GS8", "GN6"],
     "GAC Gonow": ["Way"],
     "Geely": ["CK (Old)", "New CK", "Coolray Turbo Aut", "New Coolray Turbo", "Emgrand EC7", "Emgrand X7 Sport", "GC5", "LC", "LC Cross", "MK RSI", "MK Sedan"],
     "Great Wall": ["Deer", "Florid Cross VVT", "Florid LE", "Haval 3 (Old)", "New Haval H3", "Haval 5", "Haval 6 (Old)", "New Haval H6", "Haval 7", "Haval H2", "Hover", "M4", "Poer MT", "Poer Plus Turbo Aut", "Safe", "Socool", "Voleex C10", "Voleex C20", "Voleex C30 (Neblinero LED)", "Voleex C30 (Neblinero Redondo)", "Voleex C30 Plus (Doble Neblinero)", "Voleex C50", "Wingle", "Wingle 5", "New Wingle 5", "Wingle 6", "Wingle 7"],
@@ -30,11 +32,9 @@ export const MODELOS = {
     "Karry": ["Q22"],
     "KYC": ["T3 Gran Mamut", "X5", "X5 Plus"],
     "Lifan": ["320", "330", "520", "530", "620", "Foison", "Foison One", "Furgon", "Pick Up", "Van", "X60", "X7"],
-    "Mahindra": ["KUV 100", "New Pick Up", "Pick Up (Old)", "Pick Up Euro V", "Scorpio Mawk", "XUV 500", "New XUV 500"],
     "Maxus": ["C35", "C35-L", "Deliver 9 / V9 Cargo Diesel", "Deliver 9 / V9 Pasajeros Diesel", "EV30 Aut (Electrico)", "G10 (Ejecutiva)", "G10 (Ejecutiva) Tubo Diesel", "G10 Cargo Turbo Diesel", "New T60", "T60", "T80", "T90 Bi-Turbo", "V80 Escolar", "V80 Pasajeros"],
     "MG": ["350", "360", "550", "GS", "GT Turbo", "New GT Turbo", "HS Turbo", "MG3", "New MG3 Hybrid", "MG3 Cross", "New MG5", "MG6", "One Aut", "RX5 Turbo", "ZS", "ZX", "ZX Turbo"],
     "Omoda": ["C5 Aut"],
-    "Suzuki": ["Alto 1000", "Alto 800", "Baleno", "Celerio", "K10", "Swift", "SX4"],
     "Yuejin": ["1.042"],
     "Zotye": ["Hunter", "New Hunter"],
     "ZX Auto": ["Admiral (Old)", "New Admiral", "Grand Tigger", "New Grand Tigger", "New TUV", "Terralord Turbo Diesel", "TUV Grand Tigger"]
@@ -3301,7 +3301,7 @@ export const PRODUCTOS_BASE = [
     { "id": 4331, "nombre": "DISCO FRENO DEL.1.6 BALENO", "sku": "GEN-4331", "precio": 0, "categoria": "frenos", "marca": "Universal", "modelo": "Universal", "img": "🛑" },
     { "id": 4332, "nombre": "DISCO FRENO DEL.CHICO 2.0 DESTINY", "sku": "GEN-4332", "precio": 0, "categoria": "frenos", "marca": "Universal", "modelo": "Universal", "img": "🛑" },
     { "id": 4333, "nombre": "FLEXIBLE FRENO DEL.1.6 TIGGO", "sku": "GEN-4333", "precio": 0, "categoria": "frenos", "marca": "Universal", "modelo": "Universal", "img": "🛑" },
-    { "id": 4334, "nombre": "PASTILLA FRENO DEL.2.2 MAHINDRA PICK-UP", "sku": "GEN-4334", "precio": 0, "categoria": "frenos", "marca": "Mahindra", "modelo": "2", "img": "🛑" },
+
     { "id": 4335, "nombre": "PASTILLA FRENO DEL-1.5 MG HS", "sku": "GEN-4335", "precio": 0, "categoria": "frenos", "marca": "MG", "modelo": "HS", "img": "🛑" },
     { "id": 4336, "nombre": "PASTILLA FRENO DEL.1.8 LIFAN X7 ITAL 757", "sku": "GEN-4336", "precio": 0, "categoria": "frenos", "marca": "Lifan", "modelo": "7", "img": "🛑" },
     { "id": 4337, "nombre": "PASTILLA FRENO DEL.1.5 MG3 NEW 2019->/ MG 350/ MG5", "sku": "GEN-4337", "precio": 0, "categoria": "frenos", "marca": "MG", "modelo": "MG3", "img": "🛑" },
@@ -4891,7 +4891,7 @@ export const PRODUCTOS_BASE = [
     { "id": 5921, "nombre": "BOMBA AGUA 2.5 FOTON OLN (201707100000)", "sku": "GEN-5921", "precio": 0, "categoria": "motor", "marca": "Foton", "modelo": "2", "img": "⚙️" },
     { "id": 5922, "nombre": "TUBO CALEFACCION 1.1 HAFEI MINYI (4 TUBOS)", "sku": "GEN-5922", "precio": 0, "categoria": "motor", "marca": "Hafei", "modelo": "Universal", "img": "⚙️" },
     { "id": 5923, "nombre": "RADIADOR AGUA KYC 1.5 X5 (KYC041RC)", "sku": "GEN-5923", "precio": 0, "categoria": "motor", "marca": "KYC", "modelo": "Universal", "img": "⚙️" },
-    { "id": 5924, "nombre": "TERMOSTATO CON TAPA 2.2 MAHINDRA", "sku": "GEN-5924", "precio": 0, "categoria": "motor", "marca": "Mahindra", "modelo": "2", "img": "⚙️" },
+
     { "id": 5925, "nombre": "BOMBA AGUA 2.8 FOTON TERRACOTA", "sku": "GEN-5925", "precio": 0, "categoria": "motor", "marca": "Foton", "modelo": "2", "img": "⚙️" },
     { "id": 5926, "nombre": "RADIADOR AGUA KYC 1.5 T3 GRAN MAMUT (KYC3045RC)", "sku": "GEN-5926", "precio": 0, "categoria": "motor", "marca": "KYC", "modelo": "3", "img": "⚙️" },
     { "id": 5927, "nombre": "DEPOSITO RADIADOR AUXILIAR 2.0 H3", "sku": "GEN-5927", "precio": 0, "categoria": "motor", "marca": "Universal", "modelo": "Universal", "img": "⚙️" },
@@ -6125,7 +6125,7 @@ export const PRODUCTOS_BASE = [
     { "id": 7155, "nombre": "SOPORTE CARDAN 1.5 ZOTYE (2202060-32APT008)", "sku": "GEN-7155", "precio": 0, "categoria": "direccion-suspension", "marca": "Zotye", "modelo": "2", "img": "🚙" },
     { "id": 7156, "nombre": "SOPORTE CARDAN 1.9 REFINE (49130-4A001)", "sku": "GEN-7156", "precio": 0, "categoria": "direccion-suspension", "marca": "Universal", "modelo": "Universal", "img": "🚙" },
     { "id": 7157, "nombre": "SOPORTE CARDAN 2.2 DEER/SOCCOL/ NEW ADMIRAL(2013-2013)/ ZX GRAND TIGGER/ RUDA 2.2 AUTORRAD/ AUTORRAD PICK UP/ ZX TERRALORD (1321)RC", "sku": "GEN-7157", "precio": 0, "categoria": "direccion-suspension", "marca": "Universal", "modelo": "Universal", "img": "🚙" },
-    { "id": 7158, "nombre": "SOPORTE CARDAN 2.2 MAHINDRA PICK-UP", "sku": "GEN-7158", "precio": 0, "categoria": "direccion-suspension", "marca": "Mahindra", "modelo": "2", "img": "🚙" },
+
     { "id": 7159, "nombre": "RODAMIENTO RUEDA DEL.1.6 TIGGO/TIGGO 2/FULWIN", "sku": "GEN-7159", "precio": 0, "categoria": "direccion-suspension", "marca": "Universal", "modelo": "Universal", "img": "🚙" },
     { "id": 7160, "nombre": "HOMOCINETICA L/RUEDA 1.5 MG ZS (22 ESTRIAS)", "sku": "GEN-7160", "precio": 0, "categoria": "direccion-suspension", "marca": "MG", "modelo": "ZS", "img": "🚙" },
     { "id": 7161, "nombre": "HOMOCINETICA L/CAJA TRICETA 1.5 A137/J3 VVT (28x43x21)", "sku": "GEN-7161", "precio": 0, "categoria": "direccion-suspension", "marca": "Universal", "modelo": "Universal", "img": "🚙" },
@@ -6824,4 +6824,6 @@ export const PRODUCTOS_BASE = [
     { "id": 7854, "nombre": "SENSOR RETROMARCHA WINGLE 2.8 (2143RC)", "sku": "GEN-7854", "precio": 0, "categoria": "electricos", "marca": "Universal", "modelo": "Universal", "img": "⚡" },
     { "id": 7855, "nombre": "SENSOR TEMPERATURA WINGLE 2.8 (2206)RC", "sku": "GEN-7855", "precio": 0, "categoria": "electricos", "marca": "Universal", "modelo": "Universal", "img": "⚡" },
     { "id": 7856, "nombre": "SENSOR ABS TRASERO DERECHO 2.4 WINGLE 6", "sku": "GEN-7856", "precio": 0, "categoria": "electricos", "marca": "Universal", "modelo": "Universal", "img": "⚡" },
+    { "id": 9001, "nombre": "FILTRO DE ACEITE GAC GS3", "sku": "GAC-001", "precio": 12900, "categoria": "filtros", "marca": "GAC", "modelo": "GS3", "img": "💨" },
+    { "id": 9002, "nombre": "PASTILLAS DE FRENO DELANTERAS GAC GA4", "sku": "GAC-002", "precio": 24900, "categoria": "frenos", "marca": "GAC", "modelo": "GA4", "img": "🛑" },
 ];

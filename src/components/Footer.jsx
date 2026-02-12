@@ -12,12 +12,11 @@ export const Footer = () => {
                     {/* Brand Column */}
                     <div className="space-y-4">
                         <Link href="/" className="flex items-center gap-2 group">
-                            <div className="bg-white/10 p-1.5 rounded-lg">
-                                <Car className="text-white w-6 h-6" />
-                            </div>
-                            <div className="flex flex-col leading-none">
-                                <span className="font-black text-lg md:text-xl tracking-tighter text-white italic">MUNDO<span className="text-red-600">ASIÁTICO</span></span>
-                            </div>
+                            <img
+                                src="/logo-mundo-asiatico.webp"
+                                alt="Mundo Asiático"
+                                className="h-16 w-auto object-contain bg-white/10 rounded-lg p-1"
+                            />
                         </Link>
                         <p className="text-sm leading-relaxed max-w-xs">
                             Especialistas en repuestos para vehículos chinos. Calidad garantizada, envíos a todo Chile y la mejor asesoría técnica.
@@ -61,7 +60,11 @@ export const Footer = () => {
                         <ul className="space-y-4 text-sm">
                             <li className="flex items-start gap-3">
                                 <MapPin className="text-red-600 mt-0.5 shrink-0" size={18} />
-                                <span>Av. 10 de Julio Huamachuco 1234, Santiago, Región Metropolitana</span>
+                                <span>Av. Concha y Toro 3063 Local 24, Puente Alto, Santiago</span>
+                            </li>
+                            <li className="flex items-start gap-3">
+                                <MapPin className="text-blue-500 mt-0.5 shrink-0" size={18} />
+                                <span>Urmeneta 882 Local 1, Puerto Montt</span>
                             </li>
                             <li className="flex items-center gap-3">
                                 <Phone className="text-red-600 shrink-0" size={18} />

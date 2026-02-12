@@ -2,8 +2,9 @@
 import React from 'react';
 
 const BRANDS = [
+
     'CHERY', 'MG', 'HAVAL', 'GREAT WALL',
-    'JAC', 'CHANGAN', 'SSANGYONG', 'MAXUS',
+    'JAC', 'CHANGAN', 'GAC', 'MAXUS',
     'DFSK', 'BYD', 'GEELY', 'FAW', 'BRILLIANCE'
 ];
 

@@ -72,13 +72,11 @@ export const Navbar = () => {
 
                     {/* Logo (Shrink allowed but kept visible) */}
                     <Link href="/" className="flex items-center gap-2 group shrink-0">
-                        <div className="bg-red-600 p-1.5 rounded-lg group-hover:rotate-3 transition-transform">
-                            <Car className="text-white w-6 h-6 md:w-8 md:h-8" />
-                        </div>
-                        <div className="flex flex-col leading-none">
-                            <span className="font-black text-xl md:text-2xl tracking-tighter italic">MUNDO<span className="text-red-600">ASIÁTICO</span></span>
-                            <span className="text-[9px] md:text-[10px] text-zinc-500 font-bold tracking-[0.2em] uppercase">Repuestos Expertos</span>
-                        </div>
+                        <img
+                            src="/logo-mundo-asiatico.webp"
+                            alt="Mundo Asiático"
+                            className="h-14 md:h-20 w-auto object-contain"
+                        />
                     </Link>
 
                     {/* Search Bar - Center - Large and Functional */}
@@ -255,10 +253,11 @@ export const Navbar = () => {
                         {/* Mobile Header */}
                         <div className="flex items-center justify-between p-4 border-b border-zinc-100 bg-white shrink-0">
                             <Link href="/" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-2">
-                                <div className="bg-red-600 p-1.5 rounded-lg">
-                                    <Car className="text-white w-5 h-5" />
-                                </div>
-                                <span className="font-black text-lg tracking-tighter italic">MUNDO<span className="text-red-600">ASIÁTICO</span></span>
+                                <img
+                                    src="/logo-mundo-asiatico.webp"
+                                    alt="Mundo Asiático"
+                                    className="h-10 w-auto object-contain"
+                                />
                             </Link>
                             <button
                                 onClick={() => setIsMenuOpen(false)}
@@ -362,7 +361,7 @@ export const Navbar = () => {
                                         <h3 className="font-bold text-zinc-800 text-sm">Marcas Populares</h3>
                                     </div>
                                     <div className="grid grid-cols-3 gap-2">
-                                        {MARCAS.slice(0, 12).map(marca => (
+                                        {MARCAS.map(marca => (
                                             <Link
                                                 key={marca}
                                                 href={`/catalogo?marca=${marca}`}
