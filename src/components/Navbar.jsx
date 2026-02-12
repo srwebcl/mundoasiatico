@@ -165,10 +165,12 @@ export const Navbar = () => {
                                 type="text"
                                 value={searchQuery}
                                 onChange={handleSearch}
-                                placeholder="Buscar repuesto..."
-                                className="w-full pl-10 pr-4 py-2.5 bg-zinc-100 border-none focus:bg-white focus:ring-2 focus:ring-red-600 rounded-full text-sm outline-none transition-all shadow-inner group-hover:shadow-md"
+                                placeholder="Busca repuesto: Filtro, Chery..."
+                                className="w-full pl-5 pr-12 py-2.5 bg-zinc-50 border border-zinc-200 focus:bg-white focus:border-red-600 focus:ring-4 focus:ring-red-50 rounded-full text-sm outline-none transition-all duration-300 shadow-sm group-hover:shadow-md placeholder:text-zinc-400 text-zinc-800"
                             />
-                            <Search className="absolute left-3 top-3 w-5 h-5 text-zinc-400 group-hover:text-red-500 transition-colors" />
+                            <button className="absolute right-1.5 top-1.5 bottom-1.5 w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center hover:bg-red-700 hover:scale-105 transition-all shadow-sm">
+                                <Search className="w-4 h-4" />
+                            </button>
 
                             {/* Live Results Dropdown */}
                             {(searchQuery.length >= 2 && (searchResults.brands.length > 0 || searchResults.categories.length > 0 || searchResults.products.length > 0)) && (
