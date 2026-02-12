@@ -9,6 +9,7 @@ export const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState({ brands: [], categories: [], products: [] });
+    const [activeMenu, setActiveMenu] = useState(null); // 'catalog', 'brands', or null
     const { openCart, cart } = useShop();
     const searchRef = React.useRef(null); // Ref for click outside
 
@@ -192,16 +193,26 @@ export const Navbar = () => {
 
                         {/* Mega Menu Triggers */}
                         {/* Mega Menu Triggers - Removed 'relative' for full-width dropdown */}
-                        <div className="group cursor-pointer h-full flex items-center">
-                            <span className="flex items-center gap-1 text-sm font-bold text-zinc-700 group-hover:text-red-600 transition-colors px-2">
-                                CATÁLOGO <ChevronDown size={14} />
+                        {/* Mega Menu Triggers */}
+                        <div
+                            className="h-full flex items-center"
+                            onMouseEnter={() => setActiveMenu('catalog')}
+                            onMouseLeave={() => setActiveMenu(null)}
+                        >
+                            <span className={`flex items-center gap-1 text-sm font-bold transition-colors px-2 cursor-pointer ${activeMenu === 'catalog' ? 'text-red-600' : 'text-zinc-700 hover:text-red-600'}`}>
+                                CATÁLOGO <ChevronDown size={14} className={`transition-transform duration-200 ${activeMenu === 'catalog' ? 'rotate-180' : ''}`} />
                             </span>
                             {/* Mega Menu Dropdown - Full Width */}
-                            <div className="absolute top-full left-0 mt-0 w-full bg-white border-b border-zinc-200 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all transform translate-y-2 group-hover:translate-y-0 z-40">
+                            <div className={`absolute top-full left-0 mt-0 w-full bg-white border-b border-zinc-200 shadow-xl transition-all duration-200 z-40 ${activeMenu === 'catalog' ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible translate-y-2'}`}>
                                 <div className="container mx-auto px-4 md:px-6 py-8">
                                     <div className="grid grid-cols-5 gap-6">
                                         {CATEGORIAS.map(cat => (
-                                            <Link key={cat.id} href={`/catalogo?categoria=${cat.id}`} className="group/item block relative overflow-hidden rounded-xl aspect-[4/3] shadow-sm hover:shadow-md transition-all">
+                                            <Link
+                                                key={cat.id}
+                                                href={`/catalogo?categoria=${cat.id}`}
+                                                onClick={() => setActiveMenu(null)}
+                                                className="group/item block relative overflow-hidden rounded-xl aspect-[4/3] shadow-sm hover:shadow-md transition-all"
+                                            >
                                                 <img
                                                     src={cat.image}
                                                     alt={cat.name}
@@ -221,16 +232,25 @@ export const Navbar = () => {
                             </div>
                         </div>
 
-                        <div className="group cursor-pointer h-full flex items-center">
-                            <span className="flex items-center gap-1 text-sm font-bold text-zinc-700 group-hover:text-red-600 transition-colors px-2">
-                                MARCAS <ChevronDown size={14} />
+                        <div
+                            className="h-full flex items-center"
+                            onMouseEnter={() => setActiveMenu('brands')}
+                            onMouseLeave={() => setActiveMenu(null)}
+                        >
+                            <span className={`flex items-center gap-1 text-sm font-bold transition-colors px-2 cursor-pointer ${activeMenu === 'brands' ? 'text-red-600' : 'text-zinc-700 hover:text-red-600'}`}>
+                                MARCAS <ChevronDown size={14} className={`transition-transform duration-200 ${activeMenu === 'brands' ? 'rotate-180' : ''}`} />
                             </span>
-                            <div className="absolute top-full left-0 mt-0 w-full bg-white border-b border-zinc-200 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all transform translate-y-2 group-hover:translate-y-0 z-40">
+                            <div className={`absolute top-full left-0 mt-0 w-full bg-white border-b border-zinc-200 shadow-xl transition-all duration-200 z-40 ${activeMenu === 'brands' ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible translate-y-2'}`}>
                                 <div className="container mx-auto px-4 md:px-6 py-8">
                                     <h3 className="font-bold text-zinc-400 text-xs uppercase tracking-wider mb-4">Todas nuestras marcas</h3>
                                     <div className="grid grid-cols-6 gap-y-3 gap-x-8">
                                         {MARCAS.map(marca => (
-                                            <Link key={marca} href={`/catalogo?marca=${marca}`} className="block py-2 px-3 hover:bg-zinc-50 rounded-lg text-sm font-medium text-zinc-600 hover:text-red-600 hover:pl-4 transition-all border-l-2 border-transparent hover:border-red-600">
+                                            <Link
+                                                key={marca}
+                                                href={`/catalogo?marca=${marca}`}
+                                                onClick={() => setActiveMenu(null)}
+                                                className="block py-2 px-3 hover:bg-zinc-50 rounded-lg text-sm font-medium text-zinc-600 hover:text-red-600 hover:pl-4 transition-all border-l-2 border-transparent hover:border-red-600"
+                                            >
                                                 {marca}
                                             </Link>
                                         ))}

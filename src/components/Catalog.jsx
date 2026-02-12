@@ -15,6 +15,7 @@ const Catalog = () => {
     const [selectedBrand, setSelectedBrand] = useState(brandParam || 'all');
     const [selectedModel, setSelectedModel] = useState('all'); // New State for Model
     const [priceRange, setPriceRange] = useState([0, 200000]);
+    const [sortOption, setSortOption] = useState('default'); // New Sorting State
     const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
 
     // Pagination State
@@ -28,6 +29,7 @@ const Catalog = () => {
         if (brandParam) setSelectedBrand(brandParam);
         if (categoryParam) setSelectedCategory(categoryParam);
         setCurrentPage(1); // Reset page on URL param change
+        window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top
     }, [brandParam, categoryParam]);
 
     // Reset model when brand changes
@@ -35,12 +37,14 @@ const Catalog = () => {
         setSelectedBrand(e.target.value);
         setSelectedModel('all');
         setCurrentPage(1); // Reset page
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     // Handle filter changes
     const handleCategoryChange = (catId) => {
         setSelectedCategory(catId);
         setCurrentPage(1);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const filteredProducts = PRODUCTOS_BASE.filter(product => {
@@ -49,6 +53,12 @@ const Catalog = () => {
         const matchModel = selectedModel === 'all' || product.modelo.toLowerCase() === selectedModel.toLowerCase();
         const matchPrice = product.precio >= priceRange[0] && product.precio <= priceRange[1];
         return matchCategory && matchBrand && matchModel && matchPrice;
+    }).sort((a, b) => {
+        if (sortOption === 'price-asc') return a.precio - b.precio;
+        if (sortOption === 'price-desc') return b.precio - a.precio;
+        if (sortOption === 'name-asc') return a.nombre.localeCompare(b.nombre);
+        if (sortOption === 'name-desc') return b.nombre.localeCompare(a.nombre);
+        return 0; // Default: No sorting (DB order)
     });
 
     // Pagination Logic
@@ -203,13 +213,31 @@ const Catalog = () => {
 
                     {/* Product Grid */}
                     <main className="w-full md:w-3/4">
-                        <div className="mb-6 flex justify-between items-center">
-                            <h2 className="text-2xl font-bold">
-                                {selectedCategory === 'all' ? 'Catálogo Completo' : CATEGORIAS.find(c => c.id === selectedCategory)?.name}
-                            </h2>
-                            <span className="text-zinc-500 text-sm">
-                                {filteredProducts.length} productos • {currentPage} de {totalPages}
-                            </span>
+                        <div className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                            <div>
+                                <h2 className="text-2xl font-bold">
+                                    {selectedCategory === 'all' ? 'Catálogo Completo' : CATEGORIAS.find(c => c.id === selectedCategory)?.name}
+                                </h2>
+                                <span className="text-zinc-500 text-sm">
+                                    {filteredProducts.length} productos • {currentPage} de {totalPages}
+                                </span>
+                            </div>
+
+                            {/* Sorting Dropdown */}
+                            <div className="flex items-center gap-2">
+                                <span className="text-sm font-bold text-zinc-600">Ordenar por:</span>
+                                <select
+                                    value={sortOption}
+                                    onChange={(e) => setSortOption(e.target.value)}
+                                    className="p-2 border border-zinc-200 rounded-lg text-sm focus:border-red-600 focus:outline-none bg-white"
+                                >
+                                    <option value="default">Relevancia</option>
+                                    <option value="price-asc">Precio: Menor a Mayor</option>
+                                    <option value="price-desc">Precio: Mayor a Menor</option>
+                                    <option value="name-asc">Nombre: A - Z</option>
+                                    <option value="name-desc">Nombre: Z - A</option>
+                                </select>
+                            </div>
                         </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
@@ -288,8 +316,8 @@ const Catalog = () => {
                                                     key={page}
                                                     onClick={() => handlePageChange(page)}
                                                     className={`w-10 h-10 rounded-lg font-bold transition-colors ${currentPage === page
-                                                            ? 'bg-red-600 text-white'
-                                                            : 'bg-white text-zinc-600 hover:bg-zinc-100 border border-zinc-200'
+                                                        ? 'bg-red-600 text-white'
+                                                        : 'bg-white text-zinc-600 hover:bg-zinc-100 border border-zinc-200'
                                                         }`}
                                                 >
                                                     {page}

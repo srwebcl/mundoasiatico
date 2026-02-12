@@ -60,6 +60,7 @@ export const ShopProvider = ({ children }) => {
 
     const removeFromCart = (id) => setCart(prev => prev.filter(item => item.id !== id));
     const clearCart = () => setCart([]);
+    const openCart = () => setIsCartOpen(true);
     const toggleCart = () => setIsCartOpen(!isCartOpen);
     const toggleWholesale = () => setIsWholesale(!isWholesale);
 
@@ -79,6 +80,7 @@ export const ShopProvider = ({ children }) => {
             updateQuantity,
             removeFromCart,
             clearCart,
+            openCart,
             toggleCart,
             isWholesale,
             toggleWholesale,

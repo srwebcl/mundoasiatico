@@ -1,0 +1,30 @@
+# Instrucciones para la Planilla de Productos
+
+Esta planilla está diseñada para importar y gestionar los productos de su tienda "Mundo Asiático". A continuación se describe qué información debe ir en cada columna:
+
+1.  **SKU**: (Obligatorio) Código único de identificación del producto. Ejemplo: `JTC133RC`.
+2.  **Nombre Producto**: (Obligatorio) Título claro y conciso del repuesto. Incluya qué es y para qué auto sirve.
+3.  **Descripción**: Detalles técnicos, material, y otra información relevante para el cliente.
+4.  **Categoría**: Categoría a la que pertenece (electrónicos, motor, frenos, etc.). Debe coincidir con las categorías de la web.
+5.  **Marca del Repuesto**: El fabricante del repuesto (p.ej. Bosch, Denso, China, Genuino).
+6.  **Marca Compatible**: La marca de auto para la que sirve el repuesto (p.ej. Chery, MG).
+7.  **Modelo Compatible**: El modelo específico (p.ej. Tiggo 2, ZS).
+8.  **Años Compatibles**: Rango de años para los que sirve el repuesto (p.ej. 2018-2022).
+9.  **Número de Parte OEM**: El número de pieza original del fabricante del auto. Vital para búsquedas precisas.
+10. **Número de Parte Alternativo**: Otros códigos compatibles o de cruce.
+11. **Precio Venta**: Precio normal de venta al público.
+12. **Precio Oferta**: (Opcional) Precio con descuento si aplica.
+13. **Stock Actual**: Cantidad disponible en bodega.
+14. **Stock Mínimo**: Cantidad mínima antes de que se necesite reordenar.
+15. **Origen**: Genuino, Alternativo, OEM.
+16. **Condición**: Nuevo, Usado, Reacondicionado.
+17. **Garantía**: Tiempo de garantía (p.ej. 3 meses, 6 meses).
+18. **Peso (kg)**: Peso del producto para cálculo de envíos.
+19. **Dimensiones (cm)**: Largo x Ancho x Alto.
+20. **Ubicación Bodega**: Código de ubicación física (Pasillo, Estante).
+21. **URL Imagen**: Dirección web de la foto del producto.
+
+## Recomendaciones
+- No deje el campo SKU vacío.
+- Use puntos para los decimales en precios si es necesario (aunque en CLP no se usan centavos).
+- Mantenga los nombres de categorías consistentes para que el filtro de la web funcione bien.

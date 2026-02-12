@@ -44,9 +44,12 @@ export default function ContactPage() {
                                 </div>
                                 <div>
                                     <p className="font-bold text-zinc-900 text-lg">Puente Alto</p>
-                                    <p className="text-zinc-600 leading-relaxed">
+                                    <p className="text-zinc-600 leading-relaxed mb-2">
                                         Av. Concha y Toro 3063 Local 24,<br />
                                         Santiago, Región Metropolitana
+                                    </p>
+                                    <p className="text-zinc-900 font-bold mb-1 flex items-center gap-2">
+                                        <Phone size={16} className="text-red-600" /> +569 7160 2029
                                     </p>
                                     <a
                                         href="https://maps.app.goo.gl/QJaGHNseL9MPApfx8"
@@ -65,8 +68,8 @@ export default function ContactPage() {
                                 </div>
                                 <div>
                                     <p className="font-bold text-zinc-900">Horario de Atención</p>
-                                    <p className="text-zinc-600 text-sm">Lunes a Viernes: 09:00 - 18:30 hrs</p>
-                                    <p className="text-zinc-600 text-sm">Sábado: 10:00 - 14:00 hrs</p>
+                                    <p className="text-zinc-600 text-sm">Lunes a Viernes: 9:00 - 18:30 hrs</p>
+                                    <p className="text-zinc-600 text-sm">Sábado: 09:00 - 14:00 hrs</p>
                                 </div>
                             </div>
                         </div>
@@ -92,15 +95,18 @@ export default function ContactPage() {
                                 </div>
                                 <div>
                                     <p className="font-bold text-zinc-900 text-lg">Centro</p>
-                                    <p className="text-zinc-600 leading-relaxed">
+                                    <p className="text-zinc-600 leading-relaxed mb-2">
                                         Urmeneta 882 Local 1,<br />
                                         Puerto Montt
+                                    </p>
+                                    <p className="text-zinc-900 font-bold mb-1 flex items-center gap-2">
+                                        <Phone size={16} className="text-blue-600" /> +569 4000 2500
                                     </p>
                                     <a
                                         href="https://maps.app.goo.gl/aQpANDX4KYPsdevf6"
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-2 text-blue-600 font-bold text-sm mt-2 hover:underline"
+                                        className="inline-flex items-center gap-2 text-blue-600 font-bold text-sm hover:underline"
                                     >
                                         Ver en Mapa <ArrowRight size={16} />
                                     </a>
@@ -113,8 +119,8 @@ export default function ContactPage() {
                                 </div>
                                 <div>
                                     <p className="font-bold text-zinc-900">Horario de Atención</p>
-                                    <p className="text-zinc-600 text-sm">Lunes a Viernes: 09:30 - 18:30 hrs</p>
-                                    <p className="text-zinc-600 text-sm">Sábado: 10:00 - 14:00 hrs</p>
+                                    <p className="text-zinc-600 text-sm">Lunes a Viernes: 09:00 - 18:30 hrs</p>
+                                    <p className="text-zinc-600 text-sm">Sábado: 09:00 - 13:00 hrs</p>
                                 </div>
                             </div>
                         </div>
@@ -128,17 +134,17 @@ export default function ContactPage() {
                     <div className="relative z-10">
                         <h3 className="text-2xl md:text-3xl font-bold mb-6">¿Necesitas ayuda con tu compra?</h3>
                         <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12">
-                            <a href="tel:+56984534364" className="flex items-center gap-3 text-lg hover:text-red-500 transition-colors">
+                            <a href="tel:+56971602029" className="flex items-center gap-3 text-lg hover:text-red-500 transition-colors">
                                 <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center">
                                     <Phone size={24} />
                                 </div>
-                                <span className="font-bold">+56 9 8453 4364</span>
+                                <span className="font-bold">+569 7160 2029</span>
                             </a>
-                            <a href="mailto:ventas@mundoasiatico.cl" className="flex items-center gap-3 text-lg hover:text-red-500 transition-colors">
+                            <a href="mailto:ventasweb@mundoasiatico.cl" className="flex items-center gap-3 text-lg hover:text-red-500 transition-colors">
                                 <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center">
                                     <Mail size={24} />
                                 </div>
-                                <span className="font-bold">ventas@mundoasiatico.cl</span>
+                                <span className="font-bold">ventasweb@mundoasiatico.cl</span>
                             </a>
                         </div>
                     </div>

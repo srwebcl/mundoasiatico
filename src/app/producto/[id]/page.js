@@ -24,7 +24,7 @@ export default function ProductPage() {
 
                 // Find related products (same category, different ID)
                 const related = PRODUCTOS_BASE
-                    .filter(p => p.categoria === found.categoria && p.id !== found.id)
+                    .filter(p => p.categoria === found.categoria && p.marca === found.marca && p.id !== found.id)
                     .slice(0, 4);
                 setRelatedProducts(related);
             }

@@ -5,6 +5,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { CartDrawer } from "@/components/CartDrawer";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { CookieBanner } from "@/components/CookieBanner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,7 +28,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="es">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`} suppressHydrationWarning={true}>
         <ShopProvider>
           <div className="min-h-screen bg-white text-zinc-900 font-sans flex flex-col">
             <Navbar />
@@ -37,6 +38,7 @@ export default function RootLayout({ children }) {
             <Footer />
             <CartDrawer />
             <WhatsAppButton />
+            <CookieBanner />
           </div>
         </ShopProvider>
       </body>

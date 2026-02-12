@@ -1,10 +1,11 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { MessageCircle } from 'lucide-react';
+import { useShop } from '@/context/ShopContext';
 
 export const WhatsAppButton = () => {
-    const [isBubbleVisible, setIsBubbleVisible] = useState(false);
-    const [isBubbleClosed, setIsBubbleClosed] = useState(false);
+    const { isCartOpen } = useShop();
+    const [hasNotification, setHasNotification] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     // Form states
@@ -14,15 +15,18 @@ export const WhatsAppButton = () => {
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            setIsBubbleVisible(true);
+            setHasNotification(true);
         }, 3000);
         return () => clearTimeout(timer);
     }, []);
 
+    // Hide if cart is open
+    if (isCartOpen) return null;
+
     const toggleModal = () => {
         setIsModalOpen(!isModalOpen);
         if (!isModalOpen) {
-            setIsBubbleClosed(true); // Close bubble if opening modal
+            setHasNotification(false); // Clear notification when opening
         }
     };
 
@@ -37,7 +41,7 @@ export const WhatsAppButton = () => {
             fullMessage += `\n🔢 *VIN:* ${vin}`;
         }
 
-        const url = `https://wa.me/56957191271?text=${encodeURIComponent(fullMessage)}`;
+        const url = `https://wa.me/56971602029?text=${encodeURIComponent(fullMessage)}`; // Updated number here too for consistency
 
         window.open(url, "_blank");
         toggleModal();
@@ -45,31 +49,21 @@ export const WhatsAppButton = () => {
 
     return (
         <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2 group font-sans">
-            {/* Chat Bubble - Appears on load */}
-            {!isBubbleClosed && (
-                <div
-                    className={`bg-white text-gray-800 px-4 py-3 rounded-2xl rounded-tr-none shadow-xl border border-gray-100 max-w-[250px] transform transition-all duration-500 mb-2 relative ${isBubbleVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}
-                >
-                    <p className="text-sm font-medium">
-                        Hola 👋 ¿Buscas un repuesto? ¡Cotiza rápido por aquí!
-                    </p>
-                    <div className="absolute -bottom-2 right-4 w-4 h-4 bg-white transform rotate-45 border-r border-b border-gray-100"></div>
-                    <button
-                        onClick={() => setIsBubbleClosed(true)}
-                        className="absolute -top-2 -left-2 bg-gray-200 hover:bg-gray-300 text-gray-600 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold leading-none"
-                    >
-                        &times;
-                    </button>
-                </div>
-            )}
 
             {/* Main Button Toggle */}
             <button
                 onClick={toggleModal}
-                className="bg-[#25D366] hover:bg-[#20bd5a] text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-transform duration-300 flex items-center justify-center relative overflow-hidden group-hover:shadow-[0_0_20px_rgba(37,211,102,0.5)] z-50"
+                className="bg-[#25D366] hover:bg-[#20bd5a] text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-transform duration-300 flex items-center justify-center relative overflow-visible group-hover:shadow-[0_0_20px_rgba(37,211,102,0.5)] z-50"
                 aria-label="Abrir chat de WhatsApp"
             >
-                <span className="absolute inset-0 bg-white/20 rounded-full animate-ping opacity-75"></span>
+                {/* Notification Badge */}
+                {hasNotification && (
+                    <span className="absolute -top-1 -right-1 flex h-5 w-5">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-5 w-5 bg-red-500 text-white text-[10px] font-bold items-center justify-center border-2 border-white">1</span>
+                    </span>
+                )}
+
                 <MessageCircle className="w-8 h-8 fill-current relative z-10" />
             </button>
 
@@ -77,11 +71,11 @@ export const WhatsAppButton = () => {
             {isModalOpen && (
                 <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center sm:p-4 pb-20 sm:pb-4 pointer-events-none">
                     <div
-                        className="absolute inset-0 bg-black/40 backdrop-blur-sm pointer-events-auto transition-opacity"
+                        className="absolute inset-0 bg-black/40 pointer-events-auto transition-opacity"
                         onClick={toggleModal}
                     ></div>
 
-                    <div className="bg-white w-full max-w-sm rounded-t-3xl sm:rounded-3xl shadow-2xl pointer-events-auto animate-in slide-in-from-bottom-5 fade-in duration-300">
+                    <div className="relative z-10 bg-white w-full max-w-sm rounded-t-3xl sm:rounded-3xl shadow-2xl pointer-events-auto animate-in slide-in-from-bottom-5 fade-in duration-300">
                         <div className="bg-[#075E54] p-4 text-white rounded-t-3xl flex items-center justify-between">
                             <div className="flex items-center gap-3">
                                 <div className="bg-white p-1.5 rounded-full">
@@ -163,3 +157,4 @@ export const WhatsAppButton = () => {
         </div>
     );
 }
+

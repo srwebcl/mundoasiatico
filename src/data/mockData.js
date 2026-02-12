@@ -48,7 +48,7 @@ export const CATEGORIAS = [
     { id: 'transmision', name: 'Transmisión', icon: '🔩', image: '/images/categorias/transmision-cat.jpeg' },
     { id: 'filtros', name: 'Filtros', icon: '💨', image: '/images/categorias/filtros-cat.jpeg' },
     { id: 'frenos', name: 'Frenos', icon: '🛑', image: '/images/categorias/frenos-cat.jpeg' },
-    { id: 'inyeccion-diesel', name: 'Inyección Diesel', icon: '⛽', image: '/images/categorias/inyeccion-cat.jpeg' },
+    { id: 'inyeccion-diesel', name: 'Inyección Diesel', icon: '⛽', image: '/images/categorias/inyeccion-cat.png' },
     { id: 'lubricantes', name: 'Lubricantes', icon: '🛢️', image: '/images/categorias/lubricantes-mg.png' },
     { id: 'accesorios', name: 'Accesorios', icon: '🔧', image: '/images/categorias/plumillas-cat.jpeg' }
 ];

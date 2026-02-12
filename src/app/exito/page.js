@@ -42,7 +42,7 @@ ${itemsList}
 
 Quedo atento a la confirmación.`;
 
-        window.open(`https://wa.me/56984534364?text=${encodeURIComponent(message)}`, '_blank');
+        window.open(`https://wa.me/56955668391?text=${encodeURIComponent(message)}`, '_blank');
     };
 
     return (

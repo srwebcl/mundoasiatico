@@ -68,11 +68,11 @@ export const Footer = () => {
                             </li>
                             <li className="flex items-center gap-3">
                                 <Phone className="text-red-600 shrink-0" size={18} />
-                                <span>+56 9 1234 5678</span>
+                                <span>+569 7160 2029</span>
                             </li>
                             <li className="flex items-center gap-3">
                                 <Mail className="text-red-600 shrink-0" size={18} />
-                                <span>contacto@mundoasiatico.cl</span>
+                                <span>ventasweb@mundoasiatico.cl</span>
                             </li>
                         </ul>
                     </div>
@@ -83,6 +83,7 @@ export const Footer = () => {
                     <div className="flex gap-6">
                         <Link href="/terminos" className="hover:text-white transition-colors">Términos y Condiciones</Link>
                         <Link href="/privacidad" className="hover:text-white transition-colors">Política de Privacidad</Link>
+                        <Link href="/politica-de-cookies" className="hover:text-white transition-colors">Política de Cookies</Link>
                     </div>
                 </div>
             </div>

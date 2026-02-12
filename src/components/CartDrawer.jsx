@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { ShoppingCart, X, ArrowRight } from 'lucide-react';
+import { ShoppingCart, X, ArrowRight, Trash2 } from 'lucide-react';
 import { useShop } from '@/context/ShopContext';
 import Link from 'next/link';
 
@@ -51,8 +51,8 @@ export const CartDrawer = () => {
                                             <span className="font-bold text-red-600">${(price * item.qty).toLocaleString()}</span>
                                         </div>
                                     </div>
-                                    <button onClick={() => removeFromCart(item.id)} className="text-zinc-300 hover:text-red-500 self-start">
-                                        <X size={16} />
+                                    <button onClick={() => removeFromCart(item.id)} className="text-zinc-400 hover:text-red-600 self-start p-2 hover:bg-zinc-100 rounded-full transition-colors" aria-label="Eliminar producto">
+                                        <Trash2 size={18} />
                                     </button>
                                 </div>
                             );
