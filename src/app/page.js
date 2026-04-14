@@ -1,10 +1,34 @@
 import { Hero } from "@/components/Hero";
 import Link from "next/link";
 import { ArrowRight, ShieldCheck, Truck, CreditCard, PenTool } from "lucide-react";
-import { CATEGORIAS } from "@/data/mockData";
 import { BrandCarousel } from "@/components/BrandCarousel";
 
-export default function Home() {
+// ── Fetch categorías desde la API (Server Component — sin cliente necesario) ──
+async function getCategories() {
+    try {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
+        const res = await fetch(`${apiUrl}/categories`, {
+            next: { revalidate: 3600 }, // ISR: revalida cada 1 hora
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const json = await res.json();
+        return json.data ?? [];
+    } catch (err) {
+        console.error('⚠️  No se pudo cargar categorías desde la API:', err.message);
+        // Fallback mínimo para que la página no quede en blanco
+        return [
+            { id: 1, name: 'Encendido',  slug: 'encendido', icon: '⚡', image: null },
+            { id: 2, name: 'Filtros',    slug: 'filtros',   icon: '🔩', image: null },
+            { id: 3, name: 'Inyección',  slug: 'inyeccion', icon: '💉', image: null },
+            { id: 4, name: 'Frenos',     slug: 'frenos',    icon: '🛑', image: null },
+            { id: 5, name: 'Sensores',   slug: 'sensores',  icon: '📡', image: null },
+        ];
+    }
+}
+
+export default async function Home() {
+    const categories = await getCategories();
+
     return (
         <main className="flex flex-col min-h-screen">
             <Hero />
@@ -16,7 +40,7 @@ export default function Home() {
             <section className="py-24 bg-zinc-50">
                 <div className="container mx-auto px-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {/* Card 1 */}
+                        {/* Garantía */}
                         <div className="group bg-white p-8 rounded-xl border border-zinc-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative overflow-hidden">
                             <div className="absolute top-0 right-0 w-20 h-20 bg-red-50 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-150 duration-500"></div>
                             <div className="relative z-10">
@@ -30,7 +54,7 @@ export default function Home() {
                             </div>
                         </div>
 
-                        {/* Card 2 */}
+                        {/* Despacho */}
                         <div className="group bg-white p-8 rounded-xl border border-zinc-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative overflow-hidden">
                             <div className="absolute top-0 right-0 w-20 h-20 bg-blue-50 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-150 duration-500"></div>
                             <div className="relative z-10">
@@ -44,7 +68,7 @@ export default function Home() {
                             </div>
                         </div>
 
-                        {/* Card 3 */}
+                        {/* Pago */}
                         <div className="group bg-white p-8 rounded-xl border border-zinc-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative overflow-hidden">
                             <div className="absolute top-0 right-0 w-20 h-20 bg-green-50 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-150 duration-500"></div>
                             <div className="relative z-10">
@@ -58,7 +82,7 @@ export default function Home() {
                             </div>
                         </div>
 
-                        {/* Card 4 */}
+                        {/* Soporte */}
                         <div className="group bg-white p-8 rounded-xl border border-zinc-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative overflow-hidden">
                             <div className="absolute top-0 right-0 w-20 h-20 bg-purple-50 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-150 duration-500"></div>
                             <div className="relative z-10">
@@ -77,7 +101,6 @@ export default function Home() {
 
             {/* Categories Preview */}
             <section className="py-24 bg-white relative overflow-hidden">
-                {/* Decorative Background Elements */}
                 <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
                     <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-red-50/50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
                     <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-zinc-100/50 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
@@ -93,32 +116,39 @@ export default function Home() {
                                 BUSCA POR <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-500">CATEGORÍA</span>
                             </h2>
                         </div>
-                        <Link href="/catalogo" className="hidden md:inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white border border-zinc-200 text-zinc-700 font-bold hover:border-red-600 hover:text-red-600 transition-all shadow-sm hover:shadow-md group">
+                        <Link
+                            href="/catalogo"
+                            className="hidden md:inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white border border-zinc-200 text-zinc-700 font-bold hover:border-red-600 hover:text-red-600 transition-all shadow-sm hover:shadow-md group"
+                        >
                             VER TODO EL CATÁLOGO <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                         </Link>
                     </div>
 
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
-                        {CATEGORIAS.map((cat) => (
+                        {categories.map((cat) => (
                             <Link
                                 key={cat.id}
-                                href={`/catalogo?categoria=${cat.id}`}
+                                href={`/catalogo?categoria=${cat.slug}`}
                                 className="group relative bg-zinc-50 rounded-2xl p-4 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border border-zinc-100 overflow-hidden flex flex-col aspect-[4/5]"
                             >
-                                {/* Image Container */}
+                                {/* Imagen o fondo por defecto */}
                                 <div className="absolute inset-0 z-0">
-                                    <img
-                                        src={cat.image}
-                                        alt={cat.name}
-                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-90 group-hover:opacity-100"
-                                    />
-                                    {/* Gradient Overlay */}
+                                    {cat.image ? (
+                                        <img
+                                            src={cat.image}
+                                            alt={cat.name}
+                                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full bg-gradient-to-br from-zinc-800 to-zinc-900 flex items-center justify-center text-7xl opacity-20">
+                                            {cat.icon}
+                                        </div>
+                                    )}
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity"></div>
                                 </div>
 
-                                {/* Content - positioned at bottom */}
                                 <div className="relative z-10 mt-auto w-full transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                                    <div className="w-12 h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl flex items-center justify-center text-white mb-3 shadow-lg group-hover:bg-red-600 group-hover:border-red-500 transition-all duration-300">
+                                    <div className="w-12 h-12 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl flex items-center justify-center mb-3 shadow-lg group-hover:bg-red-600 group-hover:border-red-500 transition-all duration-300">
                                         <span className="text-2xl">{cat.icon}</span>
                                     </div>
                                     <span className="block font-black text-white text-xl leading-tight mb-2">

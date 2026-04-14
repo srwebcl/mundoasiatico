@@ -1,113 +1,145 @@
 'use client';
-import React, { useState, useEffect } from 'react';
-import { Search, Filter, ChevronDown, ChevronRight, X, ShoppingCart } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Search, Filter, ChevronRight, X, ShoppingCart, Loader2 } from 'lucide-react';
 import Link from 'next/link';
-import { PRODUCTOS_BASE, CATEGORIAS, MARCAS, MODELOS } from '@/data/mockData';
 import { useShop } from '@/context/ShopContext';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
+import api from '@/lib/api';
+
+// ── Skeleton card para loading ──────────────────────────────────────────────
+const SkeletonCard = () => (
+    <div className="bg-white rounded-lg border border-zinc-200 shadow-sm overflow-hidden animate-pulse">
+        <div className="h-40 bg-zinc-100" />
+        <div className="p-4 space-y-3">
+            <div className="h-3 bg-zinc-200 rounded w-1/3" />
+            <div className="h-4 bg-zinc-200 rounded w-3/4" />
+            <div className="h-3 bg-zinc-200 rounded w-1/4" />
+            <div className="h-6 bg-zinc-200 rounded w-1/2 mt-4" />
+        </div>
+    </div>
+);
 
 const Catalog = () => {
     const searchParams = useSearchParams();
-    const brandParam = searchParams.get('marca');
-    const categoryParam = searchParams.get('categoria');
 
-    const [selectedCategory, setSelectedCategory] = useState(categoryParam || 'all');
-    const [selectedBrand, setSelectedBrand] = useState(brandParam || 'all');
-    const [selectedModel, setSelectedModel] = useState('all'); // New State for Model
-    const [priceRange, setPriceRange] = useState([0, 200000]);
-    const [sortOption, setSortOption] = useState('default'); // New Sorting State
+    // ── Estado de filtros ────────────────────────────────────────────────────
+    const [selectedCategory, setSelectedCategory] = useState(searchParams.get('categoria') || '');
+    const [selectedBrand,    setSelectedBrand]    = useState(searchParams.get('marca') || '');
+    const [selectedModel,    setSelectedModel]    = useState('');
+    const [priceMax,         setPriceMax]         = useState(200000);
+    const [sortOption,       setSortOption]       = useState('default');
+    const [searchText,       setSearchText]       = useState('');
     const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
 
-    // Pagination State
+    // ── Datos de la API ──────────────────────────────────────────────────────
+    const [products,   setProducts]   = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [brands,     setBrands]     = useState([]);
+    const [meta,       setMeta]       = useState({ total: 0, current_page: 1, last_page: 1 });
+    const [loading,    setLoading]    = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 12;
 
-    const { addToCart, isWholesale } = useShop();
+    const { addToCart, isWholesale, getProductPrice } = useShop();
 
-    // Effect to update state if URL params change
+    // ── Cargar categorías y marcas UNA sola vez ──────────────────────────────
     useEffect(() => {
-        if (brandParam) setSelectedBrand(brandParam);
-        if (categoryParam) setSelectedCategory(categoryParam);
-        setCurrentPage(1); // Reset page on URL param change
-        window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top
-    }, [brandParam, categoryParam]);
+        Promise.all([api.getCategories(), api.getBrands()])
+            .then(([catRes, brandRes]) => {
+                setCategories(catRes.data ?? []);
+                setBrands(brandRes.data ?? []);
+            })
+            .catch(console.error);
+    }, []);
 
-    // Reset model when brand changes
+    // ── Sincronizar URL params al cambiar ────────────────────────────────────
+    useEffect(() => {
+        const cat   = searchParams.get('categoria') || '';
+        const brand = searchParams.get('marca') || '';
+        setSelectedCategory(cat);
+        setSelectedBrand(brand);
+        setCurrentPage(1);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, [searchParams]);
+
+    // ── Fetch productos cuando cambia cualquier filtro ───────────────────────
+    const fetchProducts = useCallback(async () => {
+        setLoading(true);
+        try {
+            const res = await api.getProducts({
+                category:  selectedCategory || undefined,
+                brand:     selectedBrand    || undefined,
+                car_model: selectedModel    || undefined,
+                price_max: priceMax < 200000 ? priceMax : undefined,
+                search:    searchText       || undefined,
+                sort:      sortOption !== 'default' ? sortOption : undefined,
+                page:      currentPage,
+            });
+            setProducts(res.data ?? []);
+            setMeta(res.meta ?? { total: 0, current_page: 1, last_page: 1 });
+        } catch (err) {
+            console.error('Error cargando productos:', err);
+            setProducts([]);
+        } finally {
+            setLoading(false);
+        }
+    }, [selectedCategory, selectedBrand, selectedModel, priceMax, searchText, sortOption, currentPage]);
+
+    useEffect(() => {
+        fetchProducts();
+    }, [fetchProducts]);
+
+    // ── Handlers ────────────────────────────────────────────────────────────
     const handleBrandChange = (e) => {
         setSelectedBrand(e.target.value);
-        setSelectedModel('all');
-        setCurrentPage(1); // Reset page
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setSelectedModel('');
+        setCurrentPage(1);
     };
 
-    // Handle filter changes
-    const handleCategoryChange = (catId) => {
-        setSelectedCategory(catId);
+    const handleCategoryChange = (slug) => {
+        setSelectedCategory(slug);
         setCurrentPage(1);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
-
-    const filteredProducts = PRODUCTOS_BASE.filter(product => {
-        const matchCategory = selectedCategory === 'all' || product.categoria === selectedCategory;
-        const matchBrand = selectedBrand === 'all' || product.marca.toLowerCase() === selectedBrand.toLowerCase();
-        const matchModel = selectedModel === 'all' || product.modelo.toLowerCase() === selectedModel.toLowerCase();
-        const matchPrice = product.precio >= priceRange[0] && product.precio <= priceRange[1];
-        return matchCategory && matchBrand && matchModel && matchPrice;
-    }).sort((a, b) => {
-        if (sortOption === 'price-asc') return a.precio - b.precio;
-        if (sortOption === 'price-desc') return b.precio - a.precio;
-        if (sortOption === 'name-asc') return a.nombre.localeCompare(b.nombre);
-        if (sortOption === 'name-desc') return b.nombre.localeCompare(a.nombre);
-        return 0; // Default: No sorting (DB order)
-    });
-
-    // Pagination Logic
-    const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
-    const currentProducts = filteredProducts.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
-    );
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
         window.scrollTo({ top: 300, behavior: 'smooth' });
     };
 
+    const clearFilters = () => {
+        setSelectedCategory('');
+        setSelectedBrand('');
+        setSelectedModel('');
+        setPriceMax(200000);
+        setSearchText('');
+        setSortOption('default');
+        setCurrentPage(1);
+    };
+
+    // Modelos disponibles del brand seleccionado
+    const modelsForBrand = brands.find(b => b.slug === selectedBrand)?.car_models ?? [];
+
+    // Nombre de la categoría activa
+    const activeCategoryName = categories.find(c => c.slug === selectedCategory)?.name || '';
+
     return (
         <div className="bg-white min-h-screen pb-20">
-            {/* Header / Banner */}
+            {/* ── Header / Banner ─────────────────────────────────────────── */}
             <div className="container mx-auto px-4 mt-8 mb-8">
                 <div className="relative w-full h-auto min-h-[200px] md:h-64 rounded-3xl overflow-hidden shadow-2xl flex items-center bg-zinc-900 group">
-                    {/* Background Image */}
                     <img
                         src="/images/catalog-banner-v2.png"
                         alt="Catálogo Repuestos"
                         className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700"
                     />
-
-                    {/* Gradient Overlay & Content */}
                     <div className="relative z-10 w-full h-full bg-black/50 backdrop-blur-[2px] flex flex-col justify-center items-center px-4 text-center">
-                        <span className="text-white/90 font-bold tracking-[0.2em] text-xs md:text-sm uppercase mb-2 animate-in fade-in slide-in-from-bottom duration-700">
-                            {selectedBrand !== 'all' && selectedCategory !== 'all'
-                                ? `Repuestos ${selectedBrand}`
-                                : selectedBrand !== 'all'
-                                    ? 'Marca'
-                                    : selectedCategory !== 'all'
-                                        ? 'Categoría'
-                                        : 'Mundo Asiático'}
+                        <span className="text-white/90 font-bold tracking-[0.2em] text-xs md:text-sm uppercase mb-2">
+                            {selectedBrand ? 'Marca' : selectedCategory ? 'Categoría' : 'Mundo Asiático'}
                         </span>
-                        <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-white italic tracking-tighter uppercase leading-none pb-2 animate-in fade-in slide-in-from-bottom duration-700 delay-100 drop-shadow-2xl">
-                            {selectedBrand !== 'all' && selectedCategory !== 'all' ? (
+                        <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-white italic tracking-tighter uppercase leading-none pb-2 drop-shadow-2xl">
+                            {activeCategoryName || selectedBrand ? (
                                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-400 block whitespace-nowrap pr-8 pb-4 -mb-4">
-                                    {CATEGORIAS.find(c => c.id === selectedCategory)?.name || selectedCategory}
-                                </span>
-                            ) : selectedBrand !== 'all' ? (
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-400 block whitespace-nowrap pr-8 pb-4 -mb-4">
-                                    {selectedBrand}
-                                </span>
-                            ) : selectedCategory !== 'all' ? (
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-400 block whitespace-nowrap pr-8 pb-4 -mb-4">
-                                    {CATEGORIAS.find(c => c.id === selectedCategory)?.name || selectedCategory}
+                                    {activeCategoryName || selectedBrand}
                                 </span>
                             ) : (
                                 <>
@@ -123,7 +155,7 @@ const Catalog = () => {
             <div className="container mx-auto px-4 md:px-6 py-8">
                 <div className="flex flex-col md:flex-row gap-8">
 
-                    {/* Filters Sidebar */}
+                    {/* ── Sidebar de filtros ─────────────────────────────── */}
                     <div className={`
                         fixed inset-0 z-40 bg-white p-6 md:static md:p-0 md:w-64 md:block overflow-y-auto transition-transform duration-300
                         ${isMobileFiltersOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
@@ -133,7 +165,22 @@ const Catalog = () => {
                             <button onClick={() => setIsMobileFiltersOpen(false)}><X /></button>
                         </div>
 
-                        {/* Brand & Model Filters (Mi Vehículo) */}
+                        {/* Buscador */}
+                        <div className="mb-6">
+                            <label className="text-xs font-bold text-zinc-500 mb-1 block">Buscar repuesto</label>
+                            <div className="relative">
+                                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
+                                <input
+                                    type="text"
+                                    value={searchText}
+                                    onChange={e => { setSearchText(e.target.value); setCurrentPage(1); }}
+                                    placeholder="SKU, nombre..."
+                                    className="w-full pl-8 pr-3 py-2 border border-zinc-200 rounded-lg text-sm focus:border-red-600 focus:outline-none"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Mi Vehículo */}
                         <div className="mb-8">
                             <h3 className="font-bold text-zinc-900 mb-4 text-sm uppercase tracking-wider">Mi Vehículo</h3>
                             <div className="space-y-3">
@@ -144,91 +191,94 @@ const Catalog = () => {
                                         onChange={handleBrandChange}
                                         className="w-full p-2 border border-zinc-200 rounded-lg text-sm focus:border-red-600 focus:outline-none"
                                     >
-                                        <option value="all">Todas las Marcas</option>
-                                        {MARCAS.map(marca => (
-                                            <option key={marca} value={marca}>{marca}</option>
+                                        <option value="">Todas las Marcas</option>
+                                        {brands.map(b => (
+                                            <option key={b.id} value={b.slug}>{b.name}</option>
                                         ))}
                                     </select>
                                 </div>
 
-                                {/* Model Selector - Dependent on Brand */}
                                 <div>
                                     <label className="text-xs font-bold text-zinc-500 mb-1 block">Modelo</label>
                                     <select
                                         value={selectedModel}
-                                        onChange={(e) => { setSelectedModel(e.target.value); setCurrentPage(1); }}
+                                        onChange={e => { setSelectedModel(e.target.value); setCurrentPage(1); }}
+                                        disabled={!selectedBrand}
                                         className="w-full p-2 border border-zinc-200 rounded-lg text-sm focus:border-red-600 focus:outline-none disabled:bg-zinc-100 disabled:text-zinc-400"
-                                        disabled={selectedBrand === 'all'}
                                     >
-                                        <option value="all">Todos los Modelos</option>
-                                        {selectedBrand !== 'all' && MODELOS[selectedBrand]?.map(modelo => (
-                                            <option key={modelo} value={modelo}>{modelo}</option>
+                                        <option value="">Todos los Modelos</option>
+                                        {modelsForBrand.map(m => (
+                                            <option key={m.id} value={m.slug}>{m.name}</option>
                                         ))}
                                     </select>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Category Filter */}
+                        {/* Categorías */}
                         <div className="mb-8">
                             <h3 className="font-bold text-zinc-900 mb-4 text-sm uppercase tracking-wider">Categorías</h3>
                             <div className="space-y-2">
                                 <button
-                                    onClick={() => handleCategoryChange('all')}
-                                    className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors ${selectedCategory === 'all' ? 'bg-red-600 text-white' : 'hover:bg-zinc-50 text-zinc-600'}`}
+                                    onClick={() => handleCategoryChange('')}
+                                    className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors ${!selectedCategory ? 'bg-red-600 text-white' : 'hover:bg-zinc-50 text-zinc-600'}`}
                                 >
                                     Todas
                                 </button>
-                                {CATEGORIAS.map(cat => (
+                                {categories.map(cat => (
                                     <button
                                         key={cat.id}
-                                        onClick={() => handleCategoryChange(cat.id)}
-                                        className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-between ${selectedCategory === cat.id ? 'bg-red-600 text-white' : 'hover:bg-zinc-50 text-zinc-600'}`}
+                                        onClick={() => handleCategoryChange(cat.slug)}
+                                        className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-between ${selectedCategory === cat.slug ? 'bg-red-600 text-white' : 'hover:bg-zinc-50 text-zinc-600'}`}
                                     >
-                                        <span>{cat.name}</span>
-                                        {selectedCategory === cat.id && <ChevronRight size={14} />}
+                                        <span>{cat.icon} {cat.name}</span>
+                                        {selectedCategory === cat.slug && <ChevronRight size={14} />}
                                     </button>
                                 ))}
                             </div>
                         </div>
 
-                        {/* Price Filter (Simple Visual) */}
+                        {/* Precio máximo */}
                         <div>
                             <h3 className="font-bold text-zinc-900 mb-4 text-sm uppercase tracking-wider">Precio Máximo</h3>
                             <input
-                                type="range"
-                                min="0"
-                                max="200000"
-                                step="5000"
-                                value={priceRange[1]}
-                                onChange={(e) => { setPriceRange([0, parseInt(e.target.value)]); setCurrentPage(1); }}
+                                type="range" min="0" max="200000" step="5000"
+                                value={priceMax}
+                                onChange={e => { setPriceMax(parseInt(e.target.value)); setCurrentPage(1); }}
                                 className="w-full accent-red-600 cursor-pointer"
                             />
                             <div className="flex justify-between text-xs font-bold text-zinc-500 mt-2">
                                 <span>$0</span>
-                                <span>${priceRange[1].toLocaleString()}</span>
+                                <span>{priceMax < 200000 ? `$${priceMax.toLocaleString()}` : 'Sin límite'}</span>
                             </div>
                         </div>
                     </div>
 
-                    {/* Product Grid */}
+                    {/* ── Grid de productos ─────────────────────────────── */}
                     <main className="w-full md:w-3/4">
+                        {/* Barra superior */}
                         <div className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                             <div>
                                 <h2 className="text-2xl font-bold">
-                                    {selectedCategory === 'all' ? 'Catálogo Completo' : CATEGORIAS.find(c => c.id === selectedCategory)?.name}
+                                    {activeCategoryName || 'Catálogo Completo'}
                                 </h2>
                                 <span className="text-zinc-500 text-sm">
-                                    {filteredProducts.length} productos • {currentPage} de {totalPages}
+                                    {loading ? 'Cargando...' : `${meta.total} productos • Página ${meta.current_page} de ${meta.last_page}`}
                                 </span>
                             </div>
 
-                            {/* Sorting Dropdown */}
                             <div className="flex items-center gap-2">
-                                <span className="text-sm font-bold text-zinc-600">Ordenar por:</span>
+                                {/* Botón filtros mobile */}
+                                <button
+                                    onClick={() => setIsMobileFiltersOpen(true)}
+                                    className="md:hidden flex items-center gap-2 px-4 py-2 border border-zinc-200 rounded-lg text-sm font-bold"
+                                >
+                                    <Filter size={16} /> Filtros
+                                </button>
+
                                 <select
                                     value={sortOption}
-                                    onChange={(e) => setSortOption(e.target.value)}
+                                    onChange={e => { setSortOption(e.target.value); setCurrentPage(1); }}
                                     className="p-2 border border-zinc-200 rounded-lg text-sm focus:border-red-600 focus:outline-none bg-white"
                                 >
                                     <option value="default">Relevancia</option>
@@ -240,101 +290,114 @@ const Catalog = () => {
                             </div>
                         </div>
 
+                        {/* Cards */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                            {currentProducts.map(product => {
-                                const price = isWholesale ? product.precio * 0.8 : product.precio;
-                                return (
-                                    <div key={product.id} className="bg-white rounded-lg border border-zinc-200 shadow-sm hover:shadow-xl transition-shadow overflow-hidden group relative">
-                                        <Link href={`/producto/${product.id}`} className="block">
-                                            <div className="h-40 bg-zinc-100 flex items-center justify-center text-4xl group-hover:scale-105 transition-transform duration-300">
-                                                {product.img}
-                                            </div>
-                                            <div className="p-4">
-                                                <div className="text-xs font-bold text-zinc-400 mb-1 uppercase">{product.marca}</div>
-                                                <h3 className="font-bold text-zinc-900 leading-tight mb-2 h-10 overflow-hidden">{product.nombre}</h3>
-                                                <div className="text-xs text-zinc-500 mb-4">SKU: {product.sku}</div>
+                            {loading
+                                ? [...Array(6)].map((_, i) => <SkeletonCard key={i} />)
+                                : products.map(product => {
+                                    const price = getProductPrice(product);
+                                    const slug  = product.slug ?? product.id;
+                                    return (
+                                        <div key={product.id} className="bg-white rounded-lg border border-zinc-200 shadow-sm hover:shadow-xl transition-shadow overflow-hidden group relative">
+                                            <Link href={`/producto/${slug}`} className="block">
+                                                <div className="h-40 bg-zinc-100 flex items-center justify-center text-6xl group-hover:scale-105 transition-transform duration-300 overflow-hidden">
+                                                    {product.image
+                                                        ? <img src={product.image} alt={product.name} className="w-full h-full object-contain p-4" />
+                                                        : <span>{product.category?.name === 'Encendido' ? '⚡' : product.category?.name === 'Filtros' ? '🔩' : product.category?.name === 'Frenos' ? '🛑' : '🔧'}</span>
+                                                    }
+                                                </div>
+                                                <div className="p-4">
+                                                    <div className="text-xs font-bold text-zinc-400 mb-1 uppercase">
+                                                        {product.brand?.name ?? product.category?.name ?? '—'}
+                                                    </div>
+                                                    <h3 className="font-bold text-zinc-900 leading-tight mb-2 h-10 overflow-hidden">
+                                                        {product.name}
+                                                    </h3>
+                                                    <div className="text-xs text-zinc-500 mb-4">SKU: {product.sku}</div>
 
-                                                <div className="flex items-end justify-between">
-                                                    <div>
-                                                        {isWholesale && (
-                                                            <div className="text-xs text-zinc-400 line-through">${product.precio.toLocaleString()}</div>
-                                                        )}
-                                                        <div className="text-xl font-bold text-red-600">
-                                                            ${price.toLocaleString()}
+                                                    <div className="flex items-end justify-between">
+                                                        <div>
+                                                            {isWholesale && product.regular_price !== price && (
+                                                                <div className="text-xs text-zinc-400 line-through">
+                                                                    ${product.regular_price?.toLocaleString()}
+                                                                </div>
+                                                            )}
+                                                            <div className="text-xl font-bold text-red-600">
+                                                                ${price.toLocaleString()}
+                                                            </div>
+                                                            {isWholesale && <span className="text-[10px] text-blue-600 font-bold">PRECIO MAYORISTA</span>}
                                                         </div>
-                                                        {isWholesale && <span className="text-[10px] text-blue-600 font-bold">PRECIO MAYORISTA</span>}
+                                                        {!product.in_stock && (
+                                                            <span className="text-[10px] font-bold text-zinc-400 border border-zinc-200 rounded px-2 py-1">SIN STOCK</span>
+                                                        )}
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </Link>
-                                        <button
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                e.stopPropagation();
-                                                addToCart(product);
-                                            }}
-                                            className="absolute bottom-4 right-4 bg-zinc-900 text-white p-2.5 rounded-full hover:bg-red-600 transition-colors shadow-lg z-10"
-                                            title="Agregar al carro"
-                                        >
-                                            <ShoppingCart size={18} />
-                                        </button>
-                                    </div>
-                                );
-                            })}
+                                            </Link>
+
+                                            {product.in_stock && (
+                                                <button
+                                                    onClick={e => { e.preventDefault(); e.stopPropagation(); addToCart(product); }}
+                                                    className="absolute bottom-4 right-4 bg-zinc-900 text-white p-2.5 rounded-full hover:bg-red-600 transition-colors shadow-lg z-10"
+                                                    title="Agregar al carro"
+                                                >
+                                                    <ShoppingCart size={18} />
+                                                </button>
+                                            )}
+                                        </div>
+                                    );
+                                })
+                            }
                         </div>
 
-                        {filteredProducts.length === 0 ? (
+                        {/* Sin resultados */}
+                        {!loading && products.length === 0 && (
                             <div className="text-center py-20 bg-zinc-50 rounded-lg">
                                 <Filter className="mx-auto text-zinc-300 mb-4" size={48} />
                                 <p className="text-zinc-500">No encontramos repuestos con estos filtros.</p>
-                                <button onClick={() => { setSelectedBrand('all'); setSelectedCategory('all'); setCurrentPage(1); }} className="text-blue-600 font-bold mt-2">Limpiar filtros</button>
+                                <button onClick={clearFilters} className="text-red-600 font-bold mt-2">
+                                    Limpiar filtros
+                                </button>
                             </div>
-                        ) : (
-                            /* Pagination Controls */
-                            totalPages > 1 && (
-                                <div className="flex justify-center items-center gap-2 mt-8 mb-12">
-                                    <button
-                                        onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
-                                        disabled={currentPage === 1}
-                                        className="px-4 py-2 rounded-lg border border-zinc-200 text-zinc-600 hover:bg-zinc-100 disabled:opacity-50 disabled:cursor-not-allowed font-bold"
-                                    >
-                                        Anterior
-                                    </button>
+                        )}
 
-                                    <div className="flex gap-1">
-                                        {[...Array(totalPages)].map((_, i) => {
-                                            const page = i + 1;
-                                            // Show first, last, current, and surrounding pages logic could be added here for large sets
-                                            // For now, simple list
-                                            if (totalPages > 7 && Math.abs(currentPage - page) > 2 && page !== 1 && page !== totalPages) {
-                                                if (Math.abs(currentPage - page) === 3) return <span key={page} className="px-2">...</span>;
-                                                return null;
-                                            }
+                        {/* Paginación */}
+                        {!loading && meta.last_page > 1 && (
+                            <div className="flex justify-center items-center gap-2 mt-8 mb-12">
+                                <button
+                                    onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+                                    disabled={currentPage === 1}
+                                    className="px-4 py-2 rounded-lg border border-zinc-200 text-zinc-600 hover:bg-zinc-100 disabled:opacity-50 disabled:cursor-not-allowed font-bold"
+                                >
+                                    Anterior
+                                </button>
 
-                                            return (
-                                                <button
-                                                    key={page}
-                                                    onClick={() => handlePageChange(page)}
-                                                    className={`w-10 h-10 rounded-lg font-bold transition-colors ${currentPage === page
-                                                        ? 'bg-red-600 text-white'
-                                                        : 'bg-white text-zinc-600 hover:bg-zinc-100 border border-zinc-200'
-                                                        }`}
-                                                >
-                                                    {page}
-                                                </button>
-                                            );
-                                        })}
-                                    </div>
-
-                                    <button
-                                        onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
-                                        disabled={currentPage === totalPages}
-                                        className="px-4 py-2 rounded-lg border border-zinc-200 text-zinc-600 hover:bg-zinc-100 disabled:opacity-50 disabled:cursor-not-allowed font-bold"
-                                    >
-                                        Siguiente
-                                    </button>
+                                <div className="flex gap-1">
+                                    {[...Array(meta.last_page)].map((_, i) => {
+                                        const page = i + 1;
+                                        if (meta.last_page > 7 && Math.abs(currentPage - page) > 2 && page !== 1 && page !== meta.last_page) {
+                                            if (Math.abs(currentPage - page) === 3) return <span key={page} className="px-2">...</span>;
+                                            return null;
+                                        }
+                                        return (
+                                            <button
+                                                key={page}
+                                                onClick={() => handlePageChange(page)}
+                                                className={`w-10 h-10 rounded-lg font-bold transition-colors ${currentPage === page ? 'bg-red-600 text-white' : 'bg-white text-zinc-600 hover:bg-zinc-100 border border-zinc-200'}`}
+                                            >
+                                                {page}
+                                            </button>
+                                        );
+                                    })}
                                 </div>
-                            )
+
+                                <button
+                                    onClick={() => handlePageChange(Math.min(meta.last_page, currentPage + 1))}
+                                    disabled={currentPage === meta.last_page}
+                                    className="px-4 py-2 rounded-lg border border-zinc-200 text-zinc-600 hover:bg-zinc-100 disabled:opacity-50 disabled:cursor-not-allowed font-bold"
+                                >
+                                    Siguiente
+                                </button>
+                            </div>
                         )}
                     </main>
                 </div>
@@ -342,4 +405,5 @@ const Catalog = () => {
         </div>
     );
 };
+
 export default Catalog;
