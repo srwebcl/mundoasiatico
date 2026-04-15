@@ -1,7 +1,22 @@
 import React from 'react';
 import Link from 'next/link';
-import { Facebook, Instagram, Twitter, Mail, MapPin, Phone, Car } from 'lucide-react';
-import { MARCAS, CATEGORIAS } from '@/data/mockData';
+import { Facebook, Instagram, Twitter, Mail, MapPin, Phone } from 'lucide-react';
+
+// Marcas principales — sincronizado con la DB
+const MARCAS_PRINCIPALES = [
+    { name: 'Chery',       slug: 'chery'       },
+    { name: 'MG',         slug: 'mg'          },
+    { name: 'JAC',        slug: 'jac'         },
+    { name: 'Great Wall', slug: 'great-wall'  },
+    { name: 'DFSK',       slug: 'dfsk'        },
+    { name: 'Geely',      slug: 'geely'       },
+    { name: 'BYD',        slug: 'byd'         },
+    { name: 'Haval',      slug: 'haval'       },
+    { name: 'Jetour',     slug: 'jetour'      },
+    { name: 'Foton',      slug: 'foton'       },
+    { name: 'Lifan',      slug: 'lifan'       },
+    { name: 'Brilliance', slug: 'brilliance'  },
+];
 
 export const Footer = () => {
     return (
@@ -43,14 +58,14 @@ export const Footer = () => {
                     <div>
                         <h4 className="text-white font-bold mb-6 text-sm tracking-wider uppercase">Marcas Principales</h4>
                         <ul className="space-y-2 text-sm grid grid-cols-2 gap-x-4">
-                            {MARCAS.slice(0, 12).map(marca => (
-                                <li key={marca}>
-                                    <Link href={`/catalogo?marca=${marca}`} className="hover:text-red-500 transition-colors">{marca}</Link>
+                            {MARCAS_PRINCIPALES.map(m => (
+                                <li key={m.slug}>
+                                    <Link href={`/catalogo?marca=${m.slug}`} className="hover:text-red-500 transition-colors">{m.name}</Link>
                                 </li>
                             ))}
                         </ul>
                         <div className="mt-4">
-                            <Link href="/catalogo" className="text-xs text-red-500 hover:text-red-400 font-bold underline">VER TODAS ({MARCAS.length})</Link>
+                            <Link href="/catalogo" className="text-xs text-red-500 hover:text-red-400 font-bold underline">VER TODAS</Link>
                         </div>
                     </div>
 
