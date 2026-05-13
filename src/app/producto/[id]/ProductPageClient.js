@@ -206,9 +206,10 @@ export default function ProductPageClient({ params }) {
 
                             {/* Descripción */}
                             {product.description && (
-                                <p className="text-zinc-600 text-sm leading-relaxed mb-6 border-t border-zinc-100 pt-4">
-                                    {product.description}
-                                </p>
+                                <div
+                                    className="text-zinc-600 text-sm leading-relaxed mb-6 border-t border-zinc-100 pt-4 prose prose-sm max-w-none"
+                                    dangerouslySetInnerHTML={{ __html: product.description }}
+                                />
                             )}
                         </div>
 
