@@ -1,11 +1,12 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { CheckCircle, XCircle, Loader2, MessageCircle, Home, ShoppingBag, MapPin } from 'lucide-react';
 import api from '@/lib/api';
 import Link from 'next/link';
 
-export default function ExitoPage() {
+// ── Contenido real (usa useSearchParams) ─────────────────────────────────────
+function ExitoPageContent() {
     const router       = useRouter();
     const searchParams = useSearchParams();
     const [state,  setState]  = useState('loading'); // 'loading' | 'success' | 'error' | 'pending'
@@ -22,14 +23,12 @@ export default function ExitoPage() {
         const pending = JSON.parse(localStorage.getItem('ma_pending_order') || 'null');
 
         if (tbk_token || (!token_ws && !pending)) {
-            // El usuario canceló en Transbank o llegó sin pasar por checkout
             setState('error');
             setError(tbk_token ? 'El pago fue cancelado o rechazado por Transbank.' : 'No encontramos una orden reciente.');
             return;
         }
 
         if (token_ws) {
-            // Consultamos la orden guardada en backend (el backend la confirmó vía webhook o retorno)
             const orderId = pending?.order_id;
             if (orderId) {
                 api.getOrder(orderId)
@@ -39,7 +38,6 @@ export default function ExitoPage() {
                         localStorage.removeItem('ma_pending_order');
                     })
                     .catch(() => {
-                        // Igual mostramos éxito con los datos locales
                         setOrder({ id: orderId, ...pending, total: null });
                         setState('success');
                         localStorage.removeItem('ma_pending_order');
@@ -51,7 +49,6 @@ export default function ExitoPage() {
             return;
         }
 
-        // Si llegó directo (sin token) pero hay pending → mostrar pendiente
         if (pending) {
             setOrder({ id: pending.order_id, ...pending });
             setState('pending');
@@ -60,15 +57,7 @@ export default function ExitoPage() {
 
     const handleWhatsApp = () => {
         const items   = order?.items?.map(i => `- ${i.qty ?? i.quantity}x ${i.name || i.nombre}`).join('\n') ?? '';
-        const message = `Hola Mundo Asiático, realicé el pedido #${order?.id}.
-Cliente: ${order?.customer?.name}
-RUT: ${order?.customer?.rut}
-Email: ${order?.customer?.email}
-Total: $${order?.total?.toLocaleString() ?? '—'}
-Detalle:
-${items}
-Método: ${order?.shipping_method === 'starken' ? 'Envío Starken' : order?.shipping_method === 'pm' ? 'Retiro Puerto Montt' : 'Retiro Santiago'}
-Quedo atento a la confirmación.`;
+        const message = `Hola Mundo Asiático, realicé el pedido #${order?.id}.\nCliente: ${order?.customer?.name}\nRUT: ${order?.customer?.rut}\nEmail: ${order?.customer?.email}\nTotal: $${order?.total?.toLocaleString() ?? '—'}\nDetalle:\n${items}\nMétodo: ${order?.shipping_method === 'starken' ? 'Envío Starken' : order?.shipping_method === 'pm' ? 'Retiro Puerto Montt' : 'Retiro Santiago'}\nQuedo atento a la confirmación.`;
         window.open(`https://wa.me/56955668391?text=${encodeURIComponent(message)}`, '_blank');
     };
 
@@ -104,7 +93,7 @@ Quedo atento a la confirmación.`;
         </div>
     );
 
-    // ── Éxito ────────────────────────────────────────────────────────────────
+    // ── Éxito / Pendiente ────────────────────────────────────────────────────
     return (
         <div className="min-h-screen bg-zinc-50 py-12 px-4">
             <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden animate-in fade-in slide-in-from-bottom duration-500">
@@ -200,5 +189,18 @@ Quedo atento a la confirmación.`;
                 </p>
             )}
         </div>
+    );
+}
+
+// ── Export envuelto en Suspense (requerido por Next.js para useSearchParams) ──
+export default function ExitoPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen flex items-center justify-center bg-zinc-50">
+                <Loader2 className="w-12 h-12 animate-spin text-red-600" />
+            </div>
+        }>
+            <ExitoPageContent />
+        </Suspense>
     );
 }
