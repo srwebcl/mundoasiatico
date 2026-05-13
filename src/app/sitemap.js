@@ -71,6 +71,10 @@ export default async function sitemap() {
                 priority: 0.7,
             }));
         }
+    } catch (err) {
+        console.error('[Sitemap] No se pudieron cargar marcas:', err.message);
+    }
+
     // ── Categorías (dinámicas) ──────────────────────────────────────────────
     let categoryRoutes = [];
     try {
