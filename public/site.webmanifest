@@ -1,0 +1,16 @@
+{
+  "name": "Mundo Asiático",
+  "short_name": "Mundo Asiático",
+  "description": "Repuestos y accesorios importados de Asia",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#dc2626",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ]
+}
