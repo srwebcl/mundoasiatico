@@ -99,11 +99,30 @@ async function login(email, password) {
  * POST /api/auth/logout
  */
 async function logout() {
-    await request('/auth/logout', { method: 'POST' }).catch(() => {});
     if (typeof window !== 'undefined') {
         localStorage.removeItem('ma_token');
         localStorage.removeItem('ma_user');
     }
+}
+
+/**
+ * POST /api/auth/forgot-password
+ */
+async function forgotPassword(email) {
+    return request('/auth/forgot-password', {
+        method: 'POST',
+        body: JSON.stringify({ email }),
+    });
+}
+
+/**
+ * POST /api/auth/reset-password
+ */
+async function resetPassword(data) {
+    return request('/auth/reset-password', {
+        method: 'POST',
+        body: JSON.stringify(data),
+    });
 }
 
 /**
@@ -133,6 +152,34 @@ async function getOrder(id) {
     return request(`/orders/${id}`);
 }
 
+/**
+ * GET /api/my-orders
+ */
+async function getMyOrders() {
+    return request('/my-orders');
+}
+
+/**
+ * GET /api/my-orders/:id
+ */
+async function getMyOrder(id) {
+    return request(`/my-orders/${id}`);
+}
+
+// ── Cupones ───────────────────────────────────────────────────────────────
+
+/**
+ * POST /api/coupons/apply
+ * @param {string} code
+ * @param {number} amount - monto actual del carrito
+ */
+async function applyCoupon(code, amount) {
+    return request('/coupons/apply', {
+        method: 'POST',
+        body: JSON.stringify({ code, amount }),
+    });
+}
+
 // ── Helpers de usuario local ───────────────────────────────────────────────
 
 function getLocalUser() {
@@ -152,6 +199,27 @@ function isWholesale() {
     return getLocalUser()?.is_wholesale === true;
 }
 
+// ── Configuración Global ───────────────────────────────────────────────────
+
+async function getPromoBar() {
+    return request('/settings/promo-bar');
+}
+
+async function getPopups() {
+    return request('/settings/popups');
+}
+
+async function getMarketingScripts() {
+    return request('/settings/marketing-scripts');
+}
+
+async function saveWhatsAppLead(data) {
+    return request('/settings/whatsapp-lead', {
+        method: 'POST',
+        body: JSON.stringify(data),
+    });
+}
+
 // ── Export ─────────────────────────────────────────────────────────────────
 
 const api = {
@@ -164,14 +232,27 @@ const api = {
     register,
     login,
     logout,
+    forgotPassword,
+    resetPassword,
     getMe,
     // Checkout
     checkoutInit,
     getOrder,
+    getMyOrders,
+    getMyOrder,
+    // Cupones
+    applyCoupon,
     // Helpers
     getLocalUser,
     isLoggedIn,
     isWholesale,
+    // Configuración
+    getPromoBar,
+    getPopups,
+    getMarketingScripts,
+    saveWhatsAppLead,
+    // Base
+    request,
 };
 
 export default api;

@@ -9,7 +9,7 @@ import api from '@/lib/api';
 export default function RegistroPage() {
     const router = useRouter();
     const { setAuthUser } = useShop();
-    const [formData, setFormData] = useState({ name: '', rut: '', email: '', phone: '', password: '', password_confirmation: '' });
+    const [formData, setFormData] = useState({ name: '', rut: '', patente: '', email: '', phone: '', password: '', password_confirmation: '' });
     const [showPwd,  setShowPwd]  = useState(false);
     const [loading,  setLoading]  = useState(false);
     const [errors,   setErrors]   = useState({});
@@ -18,6 +18,7 @@ export default function RegistroPage() {
         const e = {};
         if (!formData.name)     e.name     = 'Ingresa tu nombre completo.';
         if (!formData.rut)      e.rut      = 'Ingresa tu RUT.';
+        if (!formData.patente)  e.patente  = 'Ingresa la patente de tu vehículo.';
         if (!formData.email)    e.email    = 'Ingresa tu email.';
         if (!formData.phone)    e.phone    = 'Ingresa tu teléfono.';
         if (formData.password.length < 8) e.password = 'La contraseña debe tener al menos 8 caracteres.';
@@ -89,6 +90,7 @@ export default function RegistroPage() {
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <Field name="name"  label="Nombre Completo"   placeholder="Juan Pérez"        autoComplete="name" />
                         <Field name="rut"   label="RUT"               placeholder="12.345.678-9"      autoComplete="off" />
+                        <Field name="patente" label="Patente del Vehículo" placeholder="Ej: AB1234"      autoComplete="off" />
                         <Field name="email" label="Email"  type="email" placeholder="juan@email.com"   autoComplete="email" />
                         <Field name="phone" label="Teléfono (WhatsApp)" placeholder="+56 9 1234 5678" autoComplete="tel" />
                         <Field name="password"              label="Contraseña (mín. 8 caracteres)" type="password" placeholder="••••••••" autoComplete="new-password" />

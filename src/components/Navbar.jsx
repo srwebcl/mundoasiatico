@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
-import { ShoppingCart, Menu, X, Search, ChevronDown, User, LogOut } from 'lucide-react';
+import { ShoppingCart, Menu, X, Search, ChevronDown, User, LogOut, ShoppingBag, Truck, FireExtinguisher, Gift, Sparkles, Megaphone, Info } from 'lucide-react';
 import { useShop } from '@/context/ShopContext';
 import { useRouter } from 'next/navigation';
 import api from '@/lib/api';
@@ -18,15 +18,28 @@ export const Navbar = () => {
     const searchRef = useRef(null);
     const searchTimer = useRef(null);
     const router = useRouter();
+    const [promoBar, setPromoBar] = useState({ 
+        text: '', 
+        enabled: false, 
+        color: '#0a0a0a', 
+        text_color: '#ffffff',
+        font_weight: 'bold',
+        icon: 'heroicon-o-truck',
+        url: '',
+        animate: false,
+        start_at: null,
+        end_at: null
+    });
 
     const totalItems = cart.reduce((acc, item) => acc + item.qty, 0);
 
-    // ── Cargar categorías y marcas para los megamenús ─────────────────────────
+    // ── Cargar categorías, marcas y promo bar ────────────────────────────────
     useEffect(() => {
-        Promise.all([api.getCategories(), api.getBrands()])
-            .then(([catRes, brandRes]) => {
+        Promise.all([api.getCategories(), api.getBrands(), api.getPromoBar()])
+            .then(([catRes, brandRes, promoRes]) => {
                 setCategories(catRes.data ?? []);
                 setBrands(brandRes.data ?? []);
+                if (promoRes) setPromoBar(promoRes);
             })
             .catch(() => {}); // silencioso
     }, []);
@@ -86,14 +99,52 @@ export const Navbar = () => {
 
     const hasResults = searchResults.categories.length > 0 || searchResults.products.length > 0;
 
+    // ── Lógica de visibilidad del banner ─────────────────────────────────────
+    const isPromoActive = () => {
+        if (!promoBar.enabled) return false;
+        const now = new Date();
+        if (promoBar.start_at && new Date(promoBar.start_at) > now) return false;
+        if (promoBar.end_at && new Date(promoBar.end_at) < now) return false;
+        return true;
+    };
+
+    const getPromoIcon = () => {
+        const iconMap = {
+            'heroicon-o-truck': <Truck size={14} />,
+            'heroicon-o-fire': <FireExtinguisher size={14} />,
+            'heroicon-o-gift': <Gift size={14} />,
+            'heroicon-o-sparkles': <Sparkles size={14} />,
+            'heroicon-o-megaphone': <Megaphone size={14} />,
+            'heroicon-o-information-circle': <Info size={14} />,
+        };
+        return iconMap[promoBar.icon] || null;
+    };
+
+    const promoContent = (
+        <div 
+            className={`text-[10px] md:text-xs py-1.5 px-4 text-center tracking-wider uppercase flex items-center justify-center gap-2 ${promoBar.animate ? 'animate-pulse' : ''}`}
+            style={{ 
+                backgroundColor: promoBar.color, 
+                color: promoBar.text_color,
+                fontWeight: promoBar.font_weight === 'black' ? '900' : (promoBar.font_weight === 'bold' ? '700' : '400')
+            }}
+        >
+            <span className="opacity-80">{getPromoIcon()}</span>
+            <span>{promoBar.text}</span>
+        </div>
+    );
+
     return (
         <nav className="bg-white border-b border-zinc-100 sticky top-0 z-50 shadow-sm font-sans">
 
             {/* Top promo bar */}
-            <div className="bg-[#0a0a0a] text-white text-[10px] md:text-xs py-1.5 px-4 text-center tracking-wider uppercase font-medium">
-                <span className="text-red-500 font-bold mr-2">OFERTA:</span>
-                Despacho gratis en compras sobre $50.000
-            </div>
+            {isPromoActive() && (
+                promoBar.url ? (
+                    <Link href={promoBar.url} className="block transition-opacity hover:opacity-90">
+                        {promoContent}
+                    </Link>
+                ) : promoContent
+            )}
 
             {/* Main header */}
             <div className="container mx-auto px-4 md:px-6 py-2">
@@ -254,11 +305,17 @@ export const Navbar = () => {
 
                         {/* Usuario autenticado */}
                         {user ? (
-                            <div className="hidden md:flex items-center gap-2">
-                                <span className="text-xs text-zinc-500 font-medium max-w-[100px] truncate">{user.name?.split(' ')[0]}</span>
+                            <div className="hidden md:flex items-center gap-1">
+                                <Link 
+                                    href="/mi-cuenta/ordenes" 
+                                    className="flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-zinc-100 text-zinc-600 transition-colors"
+                                >
+                                    <ShoppingBag size={14} className="text-red-600" />
+                                    <span className="text-xs font-bold truncate max-w-[80px]">{user.name?.split(' ')[0]}</span>
+                                </Link>
                                 <button onClick={handleLogout} title="Cerrar sesión"
                                     className="p-2 rounded-full hover:bg-red-50 hover:text-red-600 text-zinc-400 transition-colors">
-                                    <LogOut size={18} />
+                                    <LogOut size={16} />
                                 </button>
                             </div>
                         ) : (
@@ -368,12 +425,22 @@ export const Navbar = () => {
 
                             {/* Auth mobile */}
                             {user ? (
-                                <div className="flex gap-3">
-                                    <div className="flex-1 p-3 bg-zinc-100 rounded-xl text-center text-sm font-bold text-zinc-600">{user.name?.split(' ')[0]}</div>
-                                    <button onClick={() => { handleLogout(); setIsMenuOpen(false); }}
-                                        className="flex-1 p-3 bg-red-50 rounded-xl text-center text-sm font-bold text-red-600">
-                                        Cerrar sesión
-                                    </button>
+                                <div className="space-y-3">
+                                    <Link href="/mi-cuenta/ordenes" onClick={() => setIsMenuOpen(false)}
+                                        className="flex items-center justify-between p-4 bg-white rounded-xl shadow-sm border border-zinc-100 font-bold text-zinc-900">
+                                        <div className="flex items-center gap-3">
+                                            <ShoppingBag size={18} className="text-red-600" />
+                                            <span>MIS PEDIDOS</span>
+                                        </div>
+                                        <ChevronDown className="-rotate-90 text-zinc-300" size={16} />
+                                    </Link>
+                                    <div className="flex gap-3">
+                                        <div className="flex-1 p-3 bg-zinc-100 rounded-xl text-center text-sm font-bold text-zinc-600">{user.name?.split(' ')[0]}</div>
+                                        <button onClick={() => { handleLogout(); setIsMenuOpen(false); }}
+                                            className="flex-1 p-3 bg-red-50 rounded-xl text-center text-sm font-bold text-red-600">
+                                            Cerrar sesión
+                                        </button>
+                                    </div>
                                 </div>
                             ) : (
                                 <Link href="/login" onClick={() => setIsMenuOpen(false)}

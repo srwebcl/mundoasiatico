@@ -1,6 +1,6 @@
 'use client';
-import React, { useState } from 'react';
-import { User, Truck, CreditCard, CheckCircle, AlertCircle, Loader2, ArrowLeft } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { User, Truck, CreditCard, CheckCircle, AlertCircle, Loader2, ArrowLeft, X, Tag, Ticket } from 'lucide-react';
 import { useShop } from '@/context/ShopContext';
 import { useRouter } from 'next/navigation';
 import api from '@/lib/api';
@@ -47,7 +47,27 @@ export const Checkout = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
-    const total = getCartTotal();
+    // Cupones
+    const [couponCode, setCouponCode] = useState('');
+    const [couponData, setCouponData] = useState(null); // { code, discount }
+    const [couponLoading, setCouponLoading] = useState(false);
+
+    const subtotal = getCartTotal();
+    const discount = couponData ? couponData.discount : 0;
+    const total = Math.max(0, subtotal - discount);
+
+    // Pre-llenado de datos si el usuario está logueado
+    useEffect(() => {
+        const user = api.getLocalUser();
+        if (user) {
+            setFormData({
+                name: user.name || '',
+                rut: user.rut || '',
+                email: user.email || '',
+                phone: user.phone || '',
+            });
+        }
+    }, []);
 
     // ── Validaciones ─────────────────────────────────────────────────────────
     const validateStep1 = () => {
@@ -75,14 +95,37 @@ export const Checkout = () => {
         return true;
     };
 
+    // ── Cupones ──────────────────────────────────────────────────────────────
+    const handleApplyCoupon = async () => {
+        if (!couponCode) return;
+        setCouponLoading(true);
+        setError('');
+        try {
+            const res = await api.applyCoupon(couponCode, subtotal);
+            setCouponData({ code: res.code, discount: res.discount });
+            setCouponCode('');
+        } catch (err) {
+            setError(err.message || 'Error al aplicar el cupón.');
+        } finally {
+            setCouponLoading(false);
+        }
+    };
+
+    const handleRemoveCoupon = () => {
+        setCouponData(null);
+    };
+
     // ── Iniciar pago real con Transbank ──────────────────────────────────────
     const handlePayment = async () => {
         setLoading(true);
         setError('');
 
         const payload = {
-            customer: formData,
-            shipping_method: shippingMethod,
+            customer_name:  formData.name,
+            customer_email: formData.email,
+            customer_phone: formData.phone,
+            customer_rut:   formData.rut,
+            shipping_type:  shippingMethod,
             ...(shippingMethod === 'starken' && {
                 shipping_address: {
                     region:  shippingData.region,
@@ -97,6 +140,7 @@ export const Checkout = () => {
                 quantity:   item.qty,
                 unit_price: getProductPrice(item),
             })),
+            coupon_code: couponData?.code || null,
         };
 
         try {
@@ -109,8 +153,8 @@ export const Checkout = () => {
                 shipping_address: shippingMethod === 'starken' ? shippingData : null,
             }));
             clearCart();
-            // Redirigir al portal de pago de Transbank
-            window.location.href = res.webpay_url + '?token_ws=' + res.webpay_token;
+            // Redirigir al Checkout de Banchile Pagos
+            window.location.href = res.webpay_url;
         } catch (err) {
             setError(err.message || 'Error al iniciar el pago. Intenta nuevamente.');
             setLoading(false);
@@ -201,9 +245,9 @@ export const Checkout = () => {
                                     </h3>
                                     <div className="space-y-3">
                                         {[
-                                            { id: 'santiago', label: 'Retiro en Santiago (Casa Matriz)', desc: 'Disponible en 24–48 hrs hábiles.', icon: '🏢', badge: 'Gratis' },
-                                            { id: 'pm',       label: 'Retiro en Puerto Montt (Sucursal)', desc: 'Listo para retiro en máx. 3 días.', icon: '🏪', badge: 'Gratis' },
-                                            { id: 'starken',  label: 'Despacho a Domicilio (Starken)',   desc: 'Envío por pagar al recibir.', icon: '🚚', badge: 'Por pagar' },
+                                            { id: 'retiro_stgo', label: 'Retiro en Santiago (Casa Matriz)', desc: 'Disponible en 24–48 hrs hábiles.', icon: '🏢', badge: 'Gratis' },
+                                            { id: 'retiro_pm',   label: 'Retiro en Puerto Montt (Sucursal)', desc: 'Listo para retiro en máx. 3 días.', icon: '🏪', badge: 'Gratis' },
+                                            { id: 'starken',     label: 'Despacho a Domicilio (Starken)',   desc: 'Envío por pagar al recibir.', icon: '🚚', badge: 'Por pagar' },
                                         ].map(opt => (
                                             <div
                                                 key={opt.id}
@@ -303,6 +347,14 @@ export const Checkout = () => {
                                                 <span>{shippingData.street} #{shippingData.number} {shippingData.apto}, {shippingData.city}, {shippingData.region}</span>
                                             </div>
                                         )}
+                                        {couponData && (
+                                            <div className="pt-2 mt-2 border-t border-dashed border-red-200 text-red-600">
+                                                <span className="font-bold block mb-1">Cupón Aplicado:</span>
+                                                <span className="flex items-center gap-1 font-bold">
+                                                    <Ticket size={14} /> {couponData.code} (-${couponData.discount.toLocaleString()})
+                                                </span>
+                                            </div>
+                                        )}
                                     </div>
 
                                     {/* Total */}
@@ -311,15 +363,15 @@ export const Checkout = () => {
                                         <span className="text-2xl font-black text-red-600">${total.toLocaleString()}</span>
                                     </div>
 
-                                    {/* Botón Webpay */}
+                                    {/* Botón Banchile Pagos */}
                                     <button
                                         onClick={handlePayment}
                                         disabled={loading}
-                                        className="w-full bg-[#E57600] text-white py-4 rounded-xl font-bold text-lg hover:bg-[#d66e00] transition-all shadow-lg shadow-orange-200 flex items-center justify-center gap-3 disabled:opacity-70 disabled:cursor-wait"
+                                        className="w-full bg-blue-600 text-white font-bold py-4 rounded-xl hover:bg-blue-700 transition-colors flex items-center justify-center gap-3 disabled:opacity-70 disabled:cursor-not-allowed"
                                     >
                                         {loading
-                                            ? <><Loader2 size={22} className="animate-spin" /> Iniciando pago seguro...</>
-                                            : <><img src="/webpay-logo.png" className="h-6 w-auto" onError={e => { e.target.style.display = 'none'; }} alt="" /> Pagar con Webpay</>
+                                            ? <><Loader2 className="w-5 h-5 animate-spin" /> Procesando...</>
+                                            : <>Pagar con Banchile Pagos</>
                                         }
                                     </button>
                                     <p className="text-xs text-zinc-400 mt-3 text-center">
@@ -360,8 +412,16 @@ export const Checkout = () => {
                                 <div className="border-t border-zinc-100 pt-4 space-y-2">
                                     <div className="flex justify-between text-sm text-zinc-500">
                                         <span>Subtotal</span>
-                                        <span>${total.toLocaleString()}</span>
+                                        <span>${subtotal.toLocaleString()}</span>
                                     </div>
+                                    {discount > 0 && (
+                                        <div className="flex justify-between text-sm font-bold text-red-600">
+                                            <div className="flex items-center gap-1">
+                                                <Tag size={14} /> Cupón ({couponData.code})
+                                            </div>
+                                            <span>-${discount.toLocaleString()}</span>
+                                        </div>
+                                    )}
                                     <div className="flex justify-between text-sm text-zinc-500">
                                         <span>Envío</span>
                                         <span className="text-green-600 font-bold">{shippingMethod === 'starken' ? 'Por pagar al recibir' : 'Retiro Gratis'}</span>
@@ -371,6 +431,42 @@ export const Checkout = () => {
                                         <span className="text-red-600">${total.toLocaleString()}</span>
                                     </div>
                                 </div>
+
+                                {/* Formulario Cupón */}
+                                {!couponData ? (
+                                    <div className="mt-6 pt-6 border-t border-zinc-100">
+                                        <label className="text-xs font-bold text-zinc-600 block mb-2">¿Tienes un cupón?</label>
+                                        <div className="flex gap-2">
+                                            <input 
+                                                type="text" value={couponCode} placeholder="CÓDIGO"
+                                                onChange={e => setCouponCode(e.target.value.toUpperCase())}
+                                                className="flex-1 border border-zinc-200 rounded-xl px-3 py-2 text-xs focus:border-red-600 outline-none uppercase font-bold"
+                                            />
+                                            <button 
+                                                onClick={handleApplyCoupon}
+                                                disabled={couponLoading || !couponCode}
+                                                className="bg-zinc-800 text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-black transition-all disabled:opacity-50"
+                                            >
+                                                {couponLoading ? <Loader2 className="animate-spin" size={14} /> : 'Aplicar'}
+                                            </button>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="mt-4 p-3 bg-red-50 border border-red-100 rounded-xl flex items-center justify-between group">
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center shadow-sm">
+                                                <Ticket className="text-red-600" size={16} />
+                                            </div>
+                                            <div>
+                                                <p className="text-[10px] text-red-400 font-bold uppercase tracking-wider">Cupón activo</p>
+                                                <p className="text-xs font-black text-red-600">{couponData.code}</p>
+                                            </div>
+                                        </div>
+                                        <button onClick={handleRemoveCoupon} className="text-red-300 hover:text-red-600 p-1">
+                                            <X size={16} />
+                                        </button>
+                                    </div>
+                                )}
 
                                 {/* Badges de seguridad */}
                                 <div className="mt-4 pt-4 border-t border-zinc-100 space-y-2">

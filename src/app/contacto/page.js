@@ -2,8 +2,11 @@ import Link from 'next/link';
 import { MapPin, Phone, Mail, Clock, ArrowRight } from 'lucide-react';
 
 export const metadata = {
-    title: "Contacto y Sucursales | Mundo Asiático",
-    description: "Visita nuestras sucursales en Santiago y Puerto Montt. Repuestos para vehículos chinos.",
+    title: "Sucursales y Contacto | Mundo Asiático Repuestos",
+    description: "Ubica nuestras sucursales en Santiago (Puente Alto) y Puerto Montt. Atención experta en repuestos para vehículos chinos con despacho a todo Chile.",
+    alternates: {
+        canonical: 'https://mundoasiatico.cl/contacto',
+    },
 };
 
 export default function ContactPage() {

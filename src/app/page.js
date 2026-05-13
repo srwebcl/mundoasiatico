@@ -3,12 +3,20 @@ import Link from "next/link";
 import { ArrowRight, ShieldCheck, Truck, CreditCard, PenTool } from "lucide-react";
 import { BrandCarousel } from "@/components/BrandCarousel";
 
+export const metadata = {
+    title: "Repuestos para Autos Chinos | Mundo Asiático Chile",
+    description: "Tienda líder en repuestos para marcas chinas en Chile. Chery, MG, JAC, Great Wall, BYD y más. Despacho a regiones y sucursales en Santiago y Puerto Montt.",
+    alternates: {
+        canonical: 'https://mundoasiatico.cl',
+    },
+};
+
 // ── Fetch categorías desde la API (Server Component — sin cliente necesario) ──
 async function getCategories() {
     try {
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
         const res = await fetch(`${apiUrl}/categories`, {
-            next: { revalidate: 3600 }, // ISR: revalida cada 1 hora
+            cache: 'no-store', // Fuerza a obtener la información fresca (útil para e-commerce)
         });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const json = await res.json();
