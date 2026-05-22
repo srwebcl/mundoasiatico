@@ -1,6 +1,8 @@
-import React from 'react';
+'use client';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Facebook, Instagram, Twitter, Mail, MapPin, Phone } from 'lucide-react';
+import api from '@/lib/api';
 
 // Marcas principales — sincronizado con la DB
 const MARCAS_PRINCIPALES = [
@@ -19,6 +21,24 @@ const MARCAS_PRINCIPALES = [
 ];
 
 export const Footer = () => {
+    const [dynamicNumber, setDynamicNumber] = useState('56971602029');
+
+    useEffect(() => {
+        const fetchNumber = async () => {
+            try {
+                const res = await api.getWhatsAppNumber();
+                if (res && res.whatsapp_number) {
+                    setDynamicNumber(res.whatsapp_number.replace(/\+/g, ''));
+                }
+            } catch (error) {
+                console.error("Error fetching whatsapp number", error);
+            }
+        };
+        fetchNumber();
+    }, []);
+
+    const formattedNumber = `+56 9 ${dynamicNumber.slice(-8, -4)} ${dynamicNumber.slice(-4)}`;
+
     return (
         <footer className="bg-[#0a0a0a] text-zinc-400 pt-16 pb-8 border-t border-zinc-800">
             <div className="container mx-auto px-4 md:px-6">
@@ -83,7 +103,7 @@ export const Footer = () => {
                             </li>
                             <li className="flex items-center gap-3">
                                 <Phone className="text-red-600 shrink-0" size={18} />
-                                <span>+569 7160 2029</span>
+                                <span>{formattedNumber}</span>
                             </li>
                             <li className="flex items-center gap-3">
                                 <Mail className="text-red-600 shrink-0" size={18} />
