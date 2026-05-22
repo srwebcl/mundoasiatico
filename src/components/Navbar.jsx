@@ -226,6 +226,9 @@ export const Navbar = () => {
                             </div>
                         </div>
 
+                        <Link href="/noticias" className="h-full flex items-center text-sm font-bold text-zinc-700 hover:text-red-600 border-b-2 border-transparent hover:border-red-600 transition-all">
+                            NOTICIAS
+                        </Link>
                         <Link href="/contacto" className="h-full flex items-center text-sm font-bold text-zinc-700 hover:text-red-600 border-b-2 border-transparent hover:border-red-600 transition-all">
                             CONTACTO
                         </Link>
@@ -448,6 +451,11 @@ export const Navbar = () => {
                                     <User size={18} /> INGRESAR / REGISTRARSE
                                 </Link>
                             )}
+
+                            <Link href="/noticias" onClick={() => setIsMenuOpen(false)}
+                                className="flex items-center justify-center p-4 bg-white border border-zinc-200 text-zinc-700 rounded-xl font-bold">
+                                NOTICIAS
+                            </Link>
 
                             <Link href="/contacto" onClick={() => setIsMenuOpen(false)}
                                 className="flex items-center justify-center p-4 bg-white border border-zinc-200 text-zinc-700 rounded-xl font-bold">

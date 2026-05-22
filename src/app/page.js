@@ -2,6 +2,7 @@ import { Hero } from "@/components/Hero";
 import Link from "next/link";
 import { ArrowRight, ShieldCheck, Truck, CreditCard, PenTool } from "lucide-react";
 import { BrandCarousel } from "@/components/BrandCarousel";
+import { NewsSection } from "@/components/NewsSection";
 
 export const metadata = {
     title: "Repuestos para Autos Chinos | Mundo Asiático Chile",
@@ -179,6 +180,9 @@ export default async function Home() {
                     </div>
                 </div>
             </section>
+
+            {/* News Section */}
+            <NewsSection limit={3} />
 
             {/* CTA Section */}
             <section className="py-20 bg-[#0a0a0a] text-white overflow-hidden relative">

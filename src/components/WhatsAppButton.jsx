@@ -15,6 +15,21 @@ export const WhatsAppButton = () => {
     const [phone, setPhone] = useState('');
     const [patente, setPatente] = useState('');
     const [message, setMessage] = useState('');
+    const [dynamicNumber, setDynamicNumber] = useState('56971602029');
+
+    useEffect(() => {
+        const fetchNumber = async () => {
+            try {
+                const res = await api.getWhatsAppNumber();
+                if (res && res.whatsapp_number) {
+                    setDynamicNumber(res.whatsapp_number.replace(/\+/g, ''));
+                }
+            } catch (error) {
+                console.error("Error fetching whatsapp number", error);
+            }
+        };
+        fetchNumber();
+    }, []);
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -57,7 +72,7 @@ export const WhatsAppButton = () => {
         setIsSubmitting(false);
 
         const fullMessage = `Hola Mundo Asiático, mi nombre es ${name}.\n\n🚗 *Patente:* ${patente}\n🔧 *Consulta:* ${message}`;
-        const url = `https://wa.me/56971602029?text=${encodeURIComponent(fullMessage)}`;
+        const url = `https://wa.me/${dynamicNumber}?text=${encodeURIComponent(fullMessage)}`;
 
         window.open(url, "_blank");
         toggleModal();

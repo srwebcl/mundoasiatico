@@ -220,6 +220,14 @@ async function saveWhatsAppLead(data) {
     });
 }
 
+async function getWhatsAppNumber() {
+    return request('/settings/whatsapp');
+}
+
+async function getNews() {
+    return request('/news');
+}
+
 // ── Export ─────────────────────────────────────────────────────────────────
 
 const api = {
@@ -251,6 +259,8 @@ const api = {
     getPopups,
     getMarketingScripts,
     saveWhatsAppLead,
+    getWhatsAppNumber,
+    getNews,
     // Base
     request,
 };

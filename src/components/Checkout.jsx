@@ -246,7 +246,7 @@ export const Checkout = () => {
                                     <div className="space-y-3">
                                         {[
                                             { id: 'retiro_stgo', label: 'Retiro en Santiago (Casa Matriz)', desc: 'Disponible en 24–48 hrs hábiles.', icon: '🏢', badge: 'Gratis' },
-                                            { id: 'retiro_pm',   label: 'Retiro en Puerto Montt (Sucursal)', desc: 'Listo para retiro en máx. 3 días.', icon: '🏪', badge: 'Gratis' },
+                                            { id: 'retiro_pm',   label: 'Retiro en Puerto Montt (Sucursal)', desc: 'Listo para retiro en máx. 3 días hábiles.', icon: '🏪', badge: 'Gratis' },
                                             { id: 'starken',     label: 'Despacho a Domicilio (Starken)',   desc: 'Envío por pagar al recibir.', icon: '🚚', badge: 'Por pagar' },
                                         ].map(opt => (
                                             <div
