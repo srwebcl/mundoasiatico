@@ -228,6 +228,10 @@ async function getNews() {
     return request('/news');
 }
 
+async function getNewsItem(slug) {
+    return request(`/news/${slug}`);
+}
+
 // ── Export ─────────────────────────────────────────────────────────────────
 
 const api = {
@@ -261,6 +265,7 @@ const api = {
     saveWhatsAppLead,
     getWhatsAppNumber,
     getNews,
+    getNewsItem,
     // Base
     request,
 };

@@ -47,7 +47,7 @@ export function NewsSection({ limit }) {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {news.map((item) => (
-                        <article key={item.id} className="bg-zinc-50 rounded-2xl overflow-hidden border border-zinc-100 hover:border-red-200 hover:shadow-lg transition-all group flex flex-col">
+                        <Link href={`/noticias/${item.slug}`} key={item.id} className="bg-zinc-50 rounded-2xl overflow-hidden border border-zinc-100 hover:border-red-200 hover:shadow-lg transition-all group flex flex-col">
                             {item.image && (
                                 <div className="relative h-48 overflow-hidden bg-zinc-200">
                                     <img 
@@ -69,8 +69,11 @@ export function NewsSection({ limit }) {
                                     className="text-zinc-600 text-sm line-clamp-3 prose prose-sm max-w-none flex-1"
                                     dangerouslySetInnerHTML={{ __html: item.content }}
                                 />
+                                <div className="mt-4 text-red-600 font-bold text-sm flex items-center gap-1 group-hover:gap-2 transition-all">
+                                    Leer más <span>→</span>
+                                </div>
                             </div>
-                        </article>
+                        </Link>
                     ))}
                 </div>
                 
