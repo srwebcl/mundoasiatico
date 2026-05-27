@@ -232,6 +232,10 @@ async function getNewsItem(slug) {
     return request(`/news/${slug}`);
 }
 
+async function getHeroSlides() {
+    return request('/hero-slides');
+}
+
 // ── Export ─────────────────────────────────────────────────────────────────
 
 const api = {
@@ -266,6 +270,7 @@ const api = {
     getWhatsAppNumber,
     getNews,
     getNewsItem,
+    getHeroSlides,
     // Base
     request,
 };

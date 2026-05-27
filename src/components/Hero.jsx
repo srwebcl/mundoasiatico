@@ -1,9 +1,10 @@
 'use client';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay, EffectFade } from 'swiper/modules';
 import { ArrowRight, ArrowLeft } from 'lucide-react';
+import api from '@/lib/api';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -11,7 +12,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/effect-fade';
 
-const SLIDES = [
+const FALLBACK_SLIDES = [
     {
         id: 1,
         image: '/images/banner-brakes.png',
@@ -44,9 +45,40 @@ const SLIDES = [
     }
 ];
 
-
-// Adjust height for laptops and responsive view
 export const Hero = () => {
+    const [slides, setSlides] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        api.getHeroSlides()
+            .then(data => {
+                if (data && data.length > 0) {
+                    const mappedSlides = data.map(slide => ({
+                        id: slide.id,
+                        image: slide.image_url,
+                        subtitle: slide.subtitle,
+                        title: slide.title,
+                        description: slide.description,
+                        ctaText: slide.cta_text,
+                        ctaLink: slide.cta_link || '#',
+                        align: 'left'
+                    }));
+                    setSlides(mappedSlides);
+                } else {
+                    setSlides(FALLBACK_SLIDES);
+                }
+            })
+            .catch(error => {
+                console.error("Error loading hero slides:", error);
+                setSlides(FALLBACK_SLIDES);
+            })
+            .finally(() => setLoading(false));
+    }, []);
+
+    if (loading) {
+        return <section className="relative w-full h-[500px] md:h-[calc(100vh-140px)] min-h-[500px] max-h-[850px] bg-zinc-950 overflow-hidden animate-pulse"></section>;
+    }
+
     return (
         <section className="relative w-full h-[500px] md:h-[calc(100vh-140px)] min-h-[500px] max-h-[850px] bg-zinc-950 overflow-hidden group">
             <Swiper
@@ -71,7 +103,7 @@ export const Hero = () => {
                 loop={true}
                 className="w-full h-full"
             >
-                {SLIDES.map((slide) => (
+                {slides.map((slide) => (
                     <SwiperSlide key={slide.id}>
                         {/* Background Image with Slow Zoom */}
                         <div className="absolute inset-0 w-full h-full overflow-hidden">
