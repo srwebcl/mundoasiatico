@@ -15,7 +15,7 @@ export const WhatsAppButton = () => {
     const [phone, setPhone] = useState('');
     const [patente, setPatente] = useState('');
     const [message, setMessage] = useState('');
-    const [dynamicNumber, setDynamicNumber] = useState('56971602029');
+    const [dynamicNumber, setDynamicNumber] = useState('56941737497');
 
     useEffect(() => {
         const fetchNumber = async () => {

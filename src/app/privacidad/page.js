@@ -84,7 +84,7 @@ export default function PrivacyPage() {
                         <p>Si tienes preguntas sobre nuestra política de privacidad, contáctanos:</p>
                         <ul className="mt-2 text-sm space-y-1">
                             <li><strong>Email:</strong> ventasweb@mundoasiatico.cl</li>
-                            <li><strong>Teléfono:</strong> +569 7160 2029</li>
+                            <li><strong>Teléfono:</strong> +56 9 4173 7497</li>
                             <li><strong>Dirección:</strong> Av. Concha y Toro 3063 Local 24, Puente Alto, Santiago</li>
                         </ul>
                     </div>

@@ -149,7 +149,7 @@ export default function MisOrdenesPage() {
                             <p className="text-zinc-400 text-sm">Contáctanos por WhatsApp para una atención rápida.</p>
                         </div>
                         <a 
-                            href="https://wa.me/56971602029" 
+                            href="https://wa.me/56941737497" 
                             target="_blank" 
                             className="bg-green-500 text-white px-6 py-3 rounded-full font-bold hover:bg-green-600 transition-all flex items-center gap-2 shrink-0"
                         >

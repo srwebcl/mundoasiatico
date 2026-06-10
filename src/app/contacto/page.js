@@ -52,7 +52,7 @@ export default function ContactPage() {
                                         Santiago, Región Metropolitana
                                     </p>
                                     <p className="text-zinc-900 font-bold mb-1 flex items-center gap-2">
-                                        <Phone size={16} className="text-red-600" /> +569 7160 2029
+                                        <Phone size={16} className="text-red-600" /> +56 9 4173 7497
                                     </p>
                                     <a
                                         href="https://maps.app.goo.gl/QJaGHNseL9MPApfx8"
@@ -137,11 +137,11 @@ export default function ContactPage() {
                     <div className="relative z-10">
                         <h3 className="text-2xl md:text-3xl font-bold mb-6">¿Necesitas ayuda con tu compra?</h3>
                         <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12">
-                            <a href="tel:+56971602029" className="flex items-center gap-3 text-lg hover:text-red-500 transition-colors">
+                            <a href="tel:+56941737497" className="flex items-center gap-3 text-lg hover:text-red-500 transition-colors">
                                 <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center">
                                     <Phone size={24} />
                                 </div>
-                                <span className="font-bold">+569 7160 2029</span>
+                                <span className="font-bold">+56 9 4173 7497</span>
                             </a>
                             <a href="mailto:ventasweb@mundoasiatico.cl" className="flex items-center gap-3 text-lg hover:text-red-500 transition-colors">
                                 <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center">

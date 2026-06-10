@@ -6,6 +6,29 @@ import { useShop } from '@/context/ShopContext';
 import { Eye, EyeOff, Loader2, AlertCircle, CheckCircle } from 'lucide-react';
 import api from '@/lib/api';
 
+const Field = ({ name, label, type = 'text', placeholder, autoComplete, formData, setFormData, errors, setErrors, showPwd, setShowPwd }) => (
+    <div>
+        <label className="block text-sm font-bold text-zinc-700 mb-1">{label}</label>
+        <div className="relative">
+            <input
+                type={name.includes('password') && !showPwd ? 'password' : type === 'password' ? (showPwd ? 'text' : 'password') : type}
+                placeholder={placeholder}
+                value={formData[name]}
+                onChange={e => { setFormData({ ...formData, [name]: e.target.value }); setErrors({ ...errors, [name]: '' }); }}
+                autoComplete={autoComplete}
+                className={`w-full border rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-red-50 outline-none transition-all ${errors[name] ? 'border-red-400 bg-red-50' : 'border-zinc-200 focus:border-red-600'}`}
+            />
+            {(name === 'password' || name === 'password_confirmation') && (
+                <button type="button" onClick={() => setShowPwd(!showPwd)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 p-1">
+                    {showPwd ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+            )}
+        </div>
+        {errors[name] && <p className="text-xs text-red-600 mt-1">{errors[name]}</p>}
+    </div>
+);
+
 export default function RegistroPage() {
     const router = useRouter();
     const { setAuthUser } = useShop();
@@ -45,28 +68,7 @@ export default function RegistroPage() {
         }
     };
 
-    const Field = ({ name, label, type = 'text', placeholder, autoComplete }) => (
-        <div>
-            <label className="block text-sm font-bold text-zinc-700 mb-1">{label}</label>
-            <div className="relative">
-                <input
-                    type={name.includes('password') && !showPwd ? 'password' : type === 'password' ? (showPwd ? 'text' : 'password') : type}
-                    placeholder={placeholder}
-                    value={formData[name]}
-                    onChange={e => { setFormData({ ...formData, [name]: e.target.value }); setErrors({ ...errors, [name]: '' }); }}
-                    autoComplete={autoComplete}
-                    className={`w-full border rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-red-50 outline-none transition-all ${errors[name] ? 'border-red-400 bg-red-50' : 'border-zinc-200 focus:border-red-600'}`}
-                />
-                {(name === 'password' || name === 'password_confirmation') && (
-                    <button type="button" onClick={() => setShowPwd(!showPwd)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600 p-1">
-                        {showPwd ? <EyeOff size={16} /> : <Eye size={16} />}
-                    </button>
-                )}
-            </div>
-            {errors[name] && <p className="text-xs text-red-600 mt-1">{errors[name]}</p>}
-        </div>
-    );
+
 
     return (
         <div className="min-h-screen bg-zinc-50 flex items-center justify-center py-12 px-4">
@@ -88,13 +90,13 @@ export default function RegistroPage() {
                     )}
 
                     <form onSubmit={handleSubmit} className="space-y-4">
-                        <Field name="name"  label="Nombre Completo"   placeholder="Juan Pérez"        autoComplete="name" />
-                        <Field name="rut"   label="RUT"               placeholder="12.345.678-9"      autoComplete="off" />
-                        <Field name="patente" label="Patente del Vehículo" placeholder="Ej: AB1234"      autoComplete="off" />
-                        <Field name="email" label="Email"  type="email" placeholder="juan@email.com"   autoComplete="email" />
-                        <Field name="phone" label="Teléfono (WhatsApp)" placeholder="+56 9 1234 5678" autoComplete="tel" />
-                        <Field name="password"              label="Contraseña (mín. 8 caracteres)" type="password" placeholder="••••••••" autoComplete="new-password" />
-                        <Field name="password_confirmation" label="Confirmar Contraseña"            type="password" placeholder="••••••••" autoComplete="new-password" />
+                        <Field name="name"  label="Nombre Completo"   placeholder="Juan Pérez"        autoComplete="name" formData={formData} setFormData={setFormData} errors={errors} setErrors={setErrors} showPwd={showPwd} setShowPwd={setShowPwd} />
+                        <Field name="rut"   label="RUT"               placeholder="12.345.678-9"      autoComplete="off" formData={formData} setFormData={setFormData} errors={errors} setErrors={setErrors} showPwd={showPwd} setShowPwd={setShowPwd} />
+                        <Field name="patente" label="Patente del Vehículo" placeholder="Ej: AB1234"      autoComplete="off" formData={formData} setFormData={setFormData} errors={errors} setErrors={setErrors} showPwd={showPwd} setShowPwd={setShowPwd} />
+                        <Field name="email" label="Email"  type="email" placeholder="juan@email.com"   autoComplete="email" formData={formData} setFormData={setFormData} errors={errors} setErrors={setErrors} showPwd={showPwd} setShowPwd={setShowPwd} />
+                        <Field name="phone" label="Teléfono (WhatsApp)" placeholder="+56 9 1234 5678" autoComplete="tel" formData={formData} setFormData={setFormData} errors={errors} setErrors={setErrors} showPwd={showPwd} setShowPwd={setShowPwd} />
+                        <Field name="password"              label="Contraseña (mín. 8 caracteres)" type="password" placeholder="••••••••" autoComplete="new-password" formData={formData} setFormData={setFormData} errors={errors} setErrors={setErrors} showPwd={showPwd} setShowPwd={setShowPwd} />
+                        <Field name="password_confirmation" label="Confirmar Contraseña"            type="password" placeholder="••••••••" autoComplete="new-password" formData={formData} setFormData={setFormData} errors={errors} setErrors={setErrors} showPwd={showPwd} setShowPwd={setShowPwd} />
 
                         <button type="submit" disabled={loading}
                             className="w-full bg-red-600 text-white py-3.5 rounded-xl font-bold hover:bg-red-700 transition-colors shadow-lg shadow-red-100 disabled:opacity-70 flex items-center justify-center gap-2 mt-2">

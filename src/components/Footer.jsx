@@ -21,7 +21,7 @@ const MARCAS_PRINCIPALES = [
 ];
 
 export const Footer = () => {
-    const [dynamicNumber, setDynamicNumber] = useState('56971602029');
+    const [dynamicNumber, setDynamicNumber] = useState('56941737497');
 
     useEffect(() => {
         const fetchNumber = async () => {

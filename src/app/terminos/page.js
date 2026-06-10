@@ -82,7 +82,7 @@ export default function TermsPage() {
                         <p>Para consultas sobre términos y condiciones:</p>
                         <ul className="mt-2 text-sm space-y-1">
                             <li><strong>Email:</strong> ventasweb@mundoasiatico.cl</li>
-                            <li><strong>Teléfono:</strong> +569 7160 2029</li>
+                            <li><strong>Teléfono:</strong> +56 9 4173 7497</li>
                         </ul>
                     </div>
 
