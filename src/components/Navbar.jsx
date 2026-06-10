@@ -286,7 +286,11 @@ export const Navbar = () => {
                                         {searchResults.products?.length > 0 && (
                                             <div>
                                                 <div className="px-4 py-2 bg-zinc-50 text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Repuestos</div>
-                                                {searchResults.products.map(prod => (
+                                                {searchResults.products.map(prod => {
+                                                    const match = searchQuery.length > 1 && !prod.name.toLowerCase().includes(searchQuery.toLowerCase())
+                                                        ? prod.compatible_models?.find(m => m.toLowerCase().includes(searchQuery.toLowerCase()))
+                                                        : null;
+                                                    return (
                                                     <Link key={`prod-${prod.id}`} href={`/producto/${prod.slug}`} onClick={clearSearch}
                                                         className="flex items-center gap-3 px-4 py-2.5 hover:bg-zinc-50 border-b border-zinc-50 last:border-0 transition-colors">
                                                         <div className="w-8 h-8 bg-zinc-100 rounded-lg flex items-center justify-center text-sm shrink-0">
@@ -294,10 +298,11 @@ export const Navbar = () => {
                                                         </div>
                                                         <div className="flex-1 min-w-0">
                                                             <p className="text-sm font-bold text-zinc-800 truncate">{prod.name}</p>
+                                                            {match && <p className="text-[10px] text-green-600 font-bold mt-0.5">✓ Compatible con {match}</p>}
                                                             <p className="text-xs text-red-600 font-bold">${prod.regular_price?.toLocaleString()}</p>
                                                         </div>
                                                     </Link>
-                                                ))}
+                                                )})}
                                             </div>
                                         )}
 

@@ -310,10 +310,17 @@ const Catalog = () => {
                                                     <div className="text-xs font-bold text-zinc-400 mb-1 uppercase">
                                                         {product.brand?.name ?? product.category?.name ?? '—'}
                                                     </div>
-                                                    <h3 className="font-bold text-zinc-900 leading-tight mb-2 h-10 overflow-hidden">
+                                                    <h3 className="font-bold text-zinc-900 leading-tight mb-1 h-10 overflow-hidden">
                                                         {product.name}
                                                     </h3>
-                                                    <div className="text-xs text-zinc-500 mb-4">SKU: {product.sku}</div>
+                                                    {(() => {
+                                                        const match = searchText.length > 1 && !product.name.toLowerCase().includes(searchText.toLowerCase())
+                                                            ? product.compatible_models?.find(m => m.toLowerCase().includes(searchText.toLowerCase()))
+                                                            : null;
+                                                        if (match) return <div className="text-[10px] text-green-600 font-bold mb-1 line-clamp-1">✓ Compatible: {match}</div>;
+                                                        return null;
+                                                    })()}
+                                                    <div className="text-xs text-zinc-500 mb-4 truncate">SKU: {product.sku}</div>
 
                                                     <div className="flex items-end justify-between">
                                                         <div>
