@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useShop } from '@/context/ShopContext';
 import {
     ShoppingCart, Share2, CheckCircle, XCircle,
-    Truck, ShieldCheck, ChevronRight, ArrowLeft, Loader2
+    Truck, ShieldCheck, ChevronRight, ArrowLeft, Loader2, Car, X
 } from 'lucide-react';
 import Link from 'next/link';
 import api from '@/lib/api';
@@ -24,6 +24,15 @@ export default function ProductPageClient({ params }) {
     const [qty,      setQty]      = useState(1);
     const [added,    setAdded]    = useState(false);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [showCompatibility, setShowCompatibility] = useState(false);
+
+    // Agrupar modelos por marca
+    const groupedModels = product?.compatible_models?.reduce((acc, model) => {
+        const brandName = model.brand?.name || 'Otros';
+        if (!acc[brandName]) acc[brandName] = [];
+        acc[brandName].push(model);
+        return acc;
+    }, {}) || {};
 
     // ── Fetch del producto por slug ──────────────────────────────────────────
     useEffect(() => {
@@ -246,8 +255,20 @@ export default function ProductPageClient({ params }) {
                                 </button>
                             </div>
 
-                            {/* Garantías */}
-                            <div className="bg-zinc-50 rounded-xl p-4 space-y-2">
+                            {/* Garantías y Compatibilidad */}
+                            <div className="bg-zinc-50 rounded-xl p-4 space-y-3">
+                                <div className="flex items-center justify-between pb-3 border-b border-zinc-200">
+                                    <div className="flex items-center gap-2 text-sm font-bold text-zinc-800">
+                                        <Car size={18} className="text-zinc-500" />
+                                        <span>Compatibilidad de Vehículos</span>
+                                    </div>
+                                    <button
+                                        onClick={() => setShowCompatibility(true)}
+                                        className="text-xs font-bold text-red-600 hover:text-red-700 bg-white border border-zinc-200 px-3 py-1.5 rounded-full hover:border-red-600 transition-colors shadow-sm"
+                                    >
+                                        Ver compatibilidad
+                                    </button>
+                                </div>
                                 <div className="flex items-center gap-2 text-sm text-zinc-600">
                                     <Truck size={16} className="text-red-500" />
                                     <span>Despacho a todo Chile — 2 a 3 días hábiles</span>
@@ -298,6 +319,59 @@ export default function ProductPageClient({ params }) {
                         <ArrowLeft size={16} /> Volver al Catálogo
                     </Link>
                 </div>
+
+                {/* Modal de Compatibilidad */}
+                {showCompatibility && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200" onClick={() => setShowCompatibility(false)}>
+                        <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[85vh] flex flex-col animate-in zoom-in-95 duration-200" onClick={e => e.stopPropagation()}>
+                            <div className="flex items-center justify-between p-5 border-b border-zinc-100">
+                                <div>
+                                    <h3 className="font-black text-xl text-zinc-900">Vehículos Compatibles</h3>
+                                    <p className="text-xs text-zinc-500 mt-1">Este repuesto sirve para los siguientes modelos:</p>
+                                </div>
+                                <button onClick={() => setShowCompatibility(false)} className="p-2 hover:bg-zinc-100 rounded-full transition-colors">
+                                    <X size={20} className="text-zinc-500" />
+                                </button>
+                            </div>
+                            
+                            <div className="p-5 overflow-y-auto flex-1">
+                                {Object.keys(groupedModels).length > 0 ? (
+                                    <div className="space-y-6">
+                                        {Object.entries(groupedModels).map(([brand, models]) => (
+                                            <div key={brand}>
+                                                <h4 className="font-bold text-red-600 border-b border-zinc-100 pb-2 mb-3">{brand}</h4>
+                                                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                                    {models.map(model => (
+                                                        <li key={model.id} className="flex flex-col p-3 bg-zinc-50 rounded-xl border border-zinc-100">
+                                                            <span className="font-bold text-sm text-zinc-800">{model.name}</span>
+                                                            {(model.year_start || model.year_end) && (
+                                                                <span className="text-xs font-mono text-zinc-500 mt-0.5">
+                                                                    Años: {model.year_start || '...'} - {model.year_end || '...'}
+                                                                </span>
+                                                            )}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="text-center py-10">
+                                        <Car size={48} className="mx-auto text-zinc-200 mb-4" />
+                                        <p className="text-zinc-500 font-medium">No se han especificado vehículos compatibles para este repuesto.</p>
+                                        <p className="text-xs text-zinc-400 mt-2">Te recomendamos consultar por WhatsApp con el número de chasis.</p>
+                                    </div>
+                                )}
+                            </div>
+                            
+                            <div className="p-5 border-t border-zinc-100 bg-zinc-50 rounded-b-2xl flex justify-end">
+                                <button onClick={() => setShowCompatibility(false)} className="px-5 py-2.5 bg-zinc-900 text-white font-bold rounded-xl hover:bg-zinc-800 transition-colors">
+                                    Cerrar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

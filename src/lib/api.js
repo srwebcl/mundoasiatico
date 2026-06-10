@@ -70,6 +70,13 @@ async function getBrands() {
     return request('/brands');
 }
 
+/**
+ * GET /api/search/omnibar
+ */
+async function searchOmnibar(q) {
+    return request(`/search/omnibar?q=${encodeURIComponent(q)}`);
+}
+
 // ── Auth ───────────────────────────────────────────────────────────────────
 
 /**
@@ -239,11 +246,11 @@ async function getHeroSlides() {
 // ── Export ─────────────────────────────────────────────────────────────────
 
 const api = {
-    // Catálogo
     getProducts,
     getProduct,
     getCategories,
     getBrands,
+    searchOmnibar,
     // Auth
     register,
     login,

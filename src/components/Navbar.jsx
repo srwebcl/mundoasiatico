@@ -10,7 +10,7 @@ export const Navbar = () => {
     const [isMenuOpen,    setIsMenuOpen]    = useState(false);
     const [activeMenu,    setActiveMenu]    = useState(null);
     const [searchQuery,   setSearchQuery]   = useState('');
-    const [searchResults, setSearchResults] = useState({ categories: [], products: [] });
+    const [searchResults, setSearchResults] = useState({ car_models: [], categories: [], products: [] });
     const [searching,     setSearching]     = useState(false);
     const [categories,    setCategories]    = useState([]);
     const [brands,        setBrands]        = useState([]);
@@ -49,7 +49,7 @@ export const Navbar = () => {
         const handleClickOutside = e => {
             if (searchRef.current && !searchRef.current.contains(e.target)) {
                 setSearchQuery('');
-                setSearchResults({ categories: [], products: [] });
+                setSearchResults({ car_models: [], categories: [], products: [] });
             }
         };
         document.addEventListener('mousedown', handleClickOutside);
@@ -62,24 +62,21 @@ export const Navbar = () => {
         clearTimeout(searchTimer.current);
 
         if (q.length < 2) {
-            setSearchResults({ categories: [], products: [] });
+            setSearchResults({ car_models: [], categories: [], products: [] });
             return;
         }
 
         setSearching(true);
         searchTimer.current = setTimeout(async () => {
             try {
-                const [catRes, prodRes] = await Promise.all([
-                    api.getCategories(),
-                    api.getProducts({ search: q, page: 1 }),
-                ]);
-                const term = q.toLowerCase();
+                const res = await api.searchOmnibar(q);
                 setSearchResults({
-                    categories: (catRes.data ?? []).filter(c => c.name.toLowerCase().includes(term)).slice(0, 3),
-                    products:   (prodRes.data ?? []).slice(0, 4),
+                    car_models: res.car_models ?? [],
+                    categories: res.categories ?? [],
+                    products:   (res.products?.data ?? res.products ?? []).slice(0, 4),
                 });
             } catch {
-                setSearchResults({ categories: [], products: [] });
+                setSearchResults({ car_models: [], categories: [], products: [] });
             } finally {
                 setSearching(false);
             }
@@ -88,7 +85,7 @@ export const Navbar = () => {
 
     const clearSearch = () => {
         setSearchQuery('');
-        setSearchResults({ categories: [], products: [] });
+        setSearchResults({ car_models: [], categories: [], products: [] });
     };
 
     const handleLogout = async () => {
@@ -97,7 +94,7 @@ export const Navbar = () => {
         router.push('/');
     };
 
-    const hasResults = searchResults.categories.length > 0 || searchResults.products.length > 0;
+    const hasResults = searchResults.car_models?.length > 0 || searchResults.categories?.length > 0 || searchResults.products?.length > 0;
 
     // ── Lógica de visibilidad del banner ─────────────────────────────────────
     const isPromoActive = () => {
@@ -262,23 +259,35 @@ export const Navbar = () => {
                                             </div>
                                         )}
 
-                                        {searchResults.categories.length > 0 && (
+                                        {searchResults.car_models?.length > 0 && (
                                             <div className="mb-2">
-                                                <div className="px-4 py-2 bg-zinc-50 text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Categorías</div>
-                                                {searchResults.categories.map(cat => (
-                                                    <Link key={cat.id} href={`/catalogo?categoria=${cat.slug}`} onClick={clearSearch}
+                                                <div className="px-4 py-2 bg-zinc-50 text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Vehículos compatibles</div>
+                                                {searchResults.car_models.map(car => (
+                                                    <Link key={`car-${car.id}`} href={`/catalogo?car_model=${car.slug}`} onClick={clearSearch}
                                                         className="flex items-center gap-2 px-4 py-2.5 text-sm text-zinc-800 hover:bg-red-50 hover:text-red-700 transition-colors">
-                                                        <span>{cat.icon}</span> {cat.name}
+                                                        <span className="text-lg">🚗</span> Buscar repuestos para <span className="font-bold">{car.brand} {car.name}</span>
                                                     </Link>
                                                 ))}
                                             </div>
                                         )}
 
-                                        {searchResults.products.length > 0 && (
+                                        {searchResults.categories?.length > 0 && (
+                                            <div className="mb-2">
+                                                <div className="px-4 py-2 bg-zinc-50 text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Categorías</div>
+                                                {searchResults.categories.map(cat => (
+                                                    <Link key={`cat-${cat.id}`} href={`/catalogo?categoria=${cat.slug}`} onClick={clearSearch}
+                                                        className="flex items-center gap-2 px-4 py-2.5 text-sm text-zinc-800 hover:bg-red-50 hover:text-red-700 transition-colors">
+                                                        <span>{cat.icon || '📂'}</span> {cat.name}
+                                                    </Link>
+                                                ))}
+                                            </div>
+                                        )}
+
+                                        {searchResults.products?.length > 0 && (
                                             <div>
-                                                <div className="px-4 py-2 bg-zinc-50 text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Productos</div>
+                                                <div className="px-4 py-2 bg-zinc-50 text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Repuestos</div>
                                                 {searchResults.products.map(prod => (
-                                                    <Link key={prod.id} href={`/producto/${prod.slug}`} onClick={clearSearch}
+                                                    <Link key={`prod-${prod.id}`} href={`/producto/${prod.slug}`} onClick={clearSearch}
                                                         className="flex items-center gap-3 px-4 py-2.5 hover:bg-zinc-50 border-b border-zinc-50 last:border-0 transition-colors">
                                                         <div className="w-8 h-8 bg-zinc-100 rounded-lg flex items-center justify-center text-sm shrink-0">
                                                             {prod.image ? <img src={prod.image} alt={prod.name} className="w-full h-full object-contain p-0.5 rounded-lg" /> : '📦'}
