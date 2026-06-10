@@ -32,7 +32,7 @@ export async function generateMetadata({ params }) {
             ? product.description.substring(0, 155)
             : `${product.name} para ${brand}. Repuesto de calidad en Mundo Asiático, Chile. ${price ? 'Precio: ' + price + ' CLP.' : ''} SKU: ${product.sku ?? ''}.`;
 
-        const image = product.images?.[0] ?? `${DOMAIN}/og-image.jpg`;
+        const image = product.image ?? product.gallery?.[0] ?? `${DOMAIN}/og-image.jpg`;
 
         // Schema.org para el producto (Rich Results en Google)
         const productSchema = {

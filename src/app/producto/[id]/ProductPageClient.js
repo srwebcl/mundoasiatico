@@ -93,7 +93,7 @@ export default function ProductPageClient({ params }) {
     }
 
     const price  = getProductPrice ? getProductPrice(product) : product.regular_price;
-    const images = product.images?.length ? product.images : [product.image].filter(Boolean);
+    const images = [product.image, ...(product.gallery || [])].filter(Boolean);
 
     return (
         <div className="min-h-screen bg-zinc-50 py-6 md:py-10">
