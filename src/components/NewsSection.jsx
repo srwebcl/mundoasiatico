@@ -4,7 +4,7 @@ import Link from 'next/link';
 import api from '@/lib/api';
 import { Calendar } from 'lucide-react';
 
-export function NewsSection({ limit }) {
+export function NewsSection({ limit, showHeader = true }) {
     const [news, setNews] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -33,21 +33,25 @@ export function NewsSection({ limit }) {
     return (
         <section className="py-16 bg-white">
             <div className="container mx-auto px-4 max-w-7xl">
-                <div className="flex justify-between items-end mb-8 gap-4">
-                    <div className="min-w-0 max-w-full">
-                        <span className="inline-block py-1 px-3 rounded-full bg-red-100 text-red-600 font-bold tracking-wider text-xs uppercase mb-3">
-                            Mantente al día
-                        </span>
-                        <h2 className="text-2xl sm:text-3xl md:text-4xl font-black italic text-zinc-900 leading-tight">
-                            ÚLTIMAS <span className="inline-block pr-1 text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-500">NOVEDADES</span>
-                        </h2>
+                {(showHeader || limit) && (
+                    <div className="flex justify-between items-end mb-8 gap-4">
+                        {showHeader && (
+                            <div className="min-w-0 max-w-full">
+                                <span className="inline-block py-1 px-3 rounded-full bg-red-100 text-red-600 font-bold tracking-wider text-xs uppercase mb-3">
+                                    Mantente al día
+                                </span>
+                                <h2 className="text-2xl sm:text-3xl md:text-4xl font-black italic text-zinc-900 leading-tight">
+                                    ÚLTIMAS <span className="inline-block pr-1 text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-500">NOVEDADES</span>
+                                </h2>
+                            </div>
+                        )}
+                        {limit && (
+                            <Link href="/noticias" className="text-sm font-bold text-red-600 hover:text-red-700 hidden sm:block">
+                                Ver todas las noticias →
+                            </Link>
+                        )}
                     </div>
-                    {limit && (
-                        <Link href="/noticias" className="text-sm font-bold text-red-600 hover:text-red-700 hidden sm:block">
-                            Ver todas las noticias →
-                        </Link>
-                    )}
-                </div>
+                )}
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {news.map((item) => (

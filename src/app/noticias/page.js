@@ -15,7 +15,18 @@ export default function NoticiasPage() {
                     <ArrowLeft size={16} /> Volver al Inicio
                 </Link>
             </div>
-            <NewsSection />
+
+            {/* Header */}
+            <div className="container mx-auto px-4 text-center mt-8 mb-4">
+                <h1 className="text-2xl sm:text-3xl md:text-5xl font-black italic text-zinc-900 mb-4 tracking-tighter max-w-full">
+                    NOTICIAS Y <span className="text-red-600">NOVEDADES</span>
+                </h1>
+                <p className="text-zinc-500 text-lg max-w-2xl mx-auto">
+                    Mantente informado con las últimas noticias sobre repuestos, vehículos chinos y novedades de Mundo Asiático en Chile.
+                </p>
+            </div>
+
+            <NewsSection showHeader={false} />
         </main>
     );
 }
