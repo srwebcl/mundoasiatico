@@ -35,8 +35,12 @@ export function NewsSection({ limit }) {
             <div className="container mx-auto px-4 max-w-7xl">
                 <div className="flex justify-between items-end mb-8">
                     <div>
-                        <h2 className="text-2xl md:text-3xl font-black text-zinc-900 uppercase">Últimas Novedades</h2>
-                        <div className="w-20 h-1 bg-red-600 mt-2"></div>
+                        <span className="inline-block py-1 px-3 rounded-full bg-red-100 text-red-600 font-bold tracking-wider text-xs uppercase mb-3">
+                            Mantente al día
+                        </span>
+                        <h2 className="text-3xl md:text-4xl font-black italic text-zinc-900 leading-tight">
+                            ÚLTIMAS <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-500">NOVEDADES</span>
+                        </h2>
                     </div>
                     {limit && (
                         <Link href="/noticias" className="text-sm font-bold text-red-600 hover:text-red-700 hidden sm:block">

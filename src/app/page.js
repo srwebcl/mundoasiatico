@@ -109,6 +109,9 @@ export default async function Home() {
                 </div>
             </section>
 
+            {/* Featured Products (campo "Destacar en Portada" del admin) */}
+            <FeaturedProducts limit={8} />
+
             {/* Categories Preview */}
             <section className="py-24 bg-white relative overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
@@ -119,10 +122,10 @@ export default async function Home() {
                 <div className="container mx-auto px-4 relative z-10">
                     <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
                         <div>
-                            <span className="inline-block py-1 px-3 rounded-full bg-red-100 text-red-600 font-bold tracking-wider text-xs uppercase mb-4">
+                            <span className="inline-block py-1 px-3 rounded-full bg-red-100 text-red-600 font-bold tracking-wider text-xs uppercase mb-3">
                                 Lo que necesitas
                             </span>
-                            <h2 className="text-4xl md:text-5xl font-black italic text-zinc-900 leading-tight">
+                            <h2 className="text-3xl md:text-4xl font-black italic text-zinc-900 leading-tight">
                                 BUSCA POR <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-500">CATEGORÍA</span>
                             </h2>
                         </div>
@@ -181,9 +184,6 @@ export default async function Home() {
                     </div>
                 </div>
             </section>
-
-            {/* Featured Products (campo "Destacar en Portada" del admin) */}
-            <FeaturedProducts limit={8} />
 
             {/* News Section */}
             <NewsSection limit={3} />
