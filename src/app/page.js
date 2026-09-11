@@ -2,6 +2,7 @@ import { Hero } from "@/components/Hero";
 import Link from "next/link";
 import { ArrowRight, ShieldCheck, Truck, CreditCard, PenTool } from "lucide-react";
 import { BrandCarousel } from "@/components/BrandCarousel";
+import { FeaturedProducts } from "@/components/FeaturedProducts";
 import { NewsSection } from "@/components/NewsSection";
 
 export const metadata = {
@@ -180,6 +181,9 @@ export default async function Home() {
                     </div>
                 </div>
             </section>
+
+            {/* Featured Products (campo "Destacar en Portada" del admin) */}
+            <FeaturedProducts limit={8} />
 
             {/* News Section */}
             <NewsSection limit={3} />

@@ -50,6 +50,14 @@ async function getProducts(params = {}) {
 }
 
 /**
+ * GET /api/products/featured
+ * Productos marcados "Destacar en Portada" en el admin, para la vitrina del inicio.
+ */
+async function getFeaturedProducts(limit = 8) {
+    return request(`/products/featured?limit=${limit}`);
+}
+
+/**
  * GET /api/products/:slug
  */
 async function getProduct(slug) {
@@ -247,6 +255,7 @@ async function getHeroSlides() {
 
 const api = {
     getProducts,
+    getFeaturedProducts,
     getProduct,
     getCategories,
     getBrands,
