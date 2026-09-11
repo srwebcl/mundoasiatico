@@ -36,13 +36,13 @@ export function FeaturedProducts({ limit = 8 }) {
     return (
         <section className="py-16 bg-zinc-50">
             <div className="container mx-auto px-4 max-w-7xl">
-                <div className="flex justify-between items-end mb-8">
-                    <div>
+                <div className="flex justify-between items-end mb-8 gap-4">
+                    <div className="min-w-0 max-w-full">
                         <span className="inline-block py-1 px-3 rounded-full bg-red-100 text-red-600 font-bold tracking-wider text-xs uppercase mb-3">
                             Selección Mundo Asiático
                         </span>
-                        <h2 className="text-3xl md:text-4xl font-black italic text-zinc-900 leading-tight">
-                            PRODUCTOS <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-500">DESTACADOS</span>
+                        <h2 className="text-2xl sm:text-3xl md:text-4xl font-black italic text-zinc-900 leading-tight">
+                            PRODUCTOS <span className="inline-block pr-1 text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-500">DESTACADOS</span>
                         </h2>
                     </div>
                     <Link
@@ -87,7 +87,7 @@ export function FeaturedProducts({ limit = 8 }) {
                                             <div className="text-xs font-bold text-zinc-400 mb-1 uppercase truncate">
                                                 {product.brand?.name ?? product.category?.name ?? '—'}
                                             </div>
-                                            <h3 className="font-bold text-zinc-900 leading-tight mb-2 h-10 overflow-hidden">
+                                            <h3 className="font-bold text-zinc-900 leading-tight mb-2 min-h-[3.75rem] line-clamp-3">
                                                 {product.name}
                                             </h3>
                                             <div className="text-xl font-bold text-red-600">

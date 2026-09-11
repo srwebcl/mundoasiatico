@@ -33,13 +33,13 @@ export function NewsSection({ limit }) {
     return (
         <section className="py-16 bg-white">
             <div className="container mx-auto px-4 max-w-7xl">
-                <div className="flex justify-between items-end mb-8">
-                    <div>
+                <div className="flex justify-between items-end mb-8 gap-4">
+                    <div className="min-w-0 max-w-full">
                         <span className="inline-block py-1 px-3 rounded-full bg-red-100 text-red-600 font-bold tracking-wider text-xs uppercase mb-3">
                             Mantente al día
                         </span>
-                        <h2 className="text-3xl md:text-4xl font-black italic text-zinc-900 leading-tight">
-                            ÚLTIMAS <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-500">NOVEDADES</span>
+                        <h2 className="text-2xl sm:text-3xl md:text-4xl font-black italic text-zinc-900 leading-tight">
+                            ÚLTIMAS <span className="inline-block pr-1 text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-500">NOVEDADES</span>
                         </h2>
                     </div>
                     {limit && (

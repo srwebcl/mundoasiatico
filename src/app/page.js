@@ -120,13 +120,13 @@ export default async function Home() {
                 </div>
 
                 <div className="container mx-auto px-4 relative z-10">
-                    <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-                        <div>
+                    <div className="flex flex-col md:flex-row justify-between md:items-end mb-16 gap-6">
+                        <div className="min-w-0 max-w-full">
                             <span className="inline-block py-1 px-3 rounded-full bg-red-100 text-red-600 font-bold tracking-wider text-xs uppercase mb-3">
                                 Lo que necesitas
                             </span>
-                            <h2 className="text-3xl md:text-4xl font-black italic text-zinc-900 leading-tight">
-                                BUSCA POR <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-500">CATEGORÍA</span>
+                            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black italic text-zinc-900 leading-tight">
+                                BUSCA POR <span className="inline-block pr-1 text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-500">CATEGORÍA</span>
                             </h2>
                         </div>
                         <Link
