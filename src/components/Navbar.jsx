@@ -238,11 +238,17 @@ export const Navbar = () => {
                                 type="text"
                                 value={searchQuery}
                                 onChange={e => handleSearch(e.target.value)}
+                                onKeyDown={e => {
+                                    if (e.key === 'Enter' && searchQuery.trim()) {
+                                        router.push(`/catalogo?search=${encodeURIComponent(searchQuery.trim())}`);
+                                        clearSearch();
+                                    }
+                                }}
                                 placeholder="Busca repuesto: Filtro, Chery..."
                                 className="w-full pl-5 pr-12 py-2.5 bg-zinc-50 border border-zinc-200 focus:bg-white focus:border-red-600 focus:ring-4 focus:ring-red-50 rounded-full text-sm outline-none transition-all shadow-sm group-hover:shadow-md placeholder:text-zinc-400 text-zinc-800"
                             />
                             <button
-                                onClick={() => { if (searchQuery) router.push(`/catalogo?search=${searchQuery}`); clearSearch(); }}
+                                onClick={() => { if (searchQuery.trim()) router.push(`/catalogo?search=${encodeURIComponent(searchQuery.trim())}`); clearSearch(); }}
                                 className="absolute right-1.5 top-1.5 bottom-1.5 w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center hover:bg-red-700 transition-all shadow-sm"
                             >
                                 <Search className="w-4 h-4" />
@@ -377,7 +383,7 @@ export const Navbar = () => {
                         <div className="sticky top-0 bg-white p-4 border-b border-zinc-100 shadow-sm z-10">
                             <div className="relative">
                                 <input type="text" value={searchQuery} onChange={e => handleSearch(e.target.value)}
-                                    placeholder="Buscar repuesto..." onKeyDown={e => { if (e.key === 'Enter') { router.push(`/catalogo?search=${searchQuery}`); setIsMenuOpen(false); clearSearch(); } }}
+                                    placeholder="Buscar repuesto..." onKeyDown={e => { if (e.key === 'Enter' && searchQuery.trim()) { router.push(`/catalogo?search=${encodeURIComponent(searchQuery.trim())}`); setIsMenuOpen(false); clearSearch(); } }}
                                     className="w-full pl-10 pr-4 py-3 bg-zinc-100 rounded-xl text-base focus:ring-2 focus:ring-red-600 outline-none" />
                                 <Search className="absolute left-3 top-3.5 w-5 h-5 text-zinc-400" />
                             </div>

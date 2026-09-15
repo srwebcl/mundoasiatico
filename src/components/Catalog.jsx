@@ -28,7 +28,7 @@ const Catalog = () => {
     const [selectedModel,    setSelectedModel]    = useState('');
     const [priceMax,         setPriceMax]         = useState(200000);
     const [sortOption,       setSortOption]       = useState('default');
-    const [searchText,       setSearchText]       = useState('');
+    const [searchText,       setSearchText]       = useState(searchParams.get('search') || '');
     const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
 
     // ── Datos de la API ──────────────────────────────────────────────────────
@@ -53,10 +53,12 @@ const Catalog = () => {
 
     // ── Sincronizar URL params al cambiar ────────────────────────────────────
     useEffect(() => {
-        const cat   = searchParams.get('categoria') || '';
-        const brand = searchParams.get('marca') || '';
+        const cat    = searchParams.get('categoria') || '';
+        const brand  = searchParams.get('marca') || '';
+        const search = searchParams.get('search') || '';
         setSelectedCategory(cat);
         setSelectedBrand(brand);
+        setSearchText(search);
         setCurrentPage(1);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }, [searchParams]);
