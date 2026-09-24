@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { CheckCircle, XCircle, Loader2, MessageCircle, Home, ShoppingBag, MapPin } from 'lucide-react';
 import api from '@/lib/api';
 import Link from 'next/link';
+import { trackAdsConversion } from '@/lib/gtag';
 
 // ── Contenido real (usa useSearchParams) ─────────────────────────────────────
 function ExitoPageContent() {
@@ -35,11 +36,13 @@ function ExitoPageContent() {
                     .then(res => {
                         setOrder({ ...res.data, customer: pending.customer, shipping_method: pending.shipping_method, shipping_address: pending.shipping_address });
                         setState('success');
+                        trackAdsConversion({ value: res.data?.total_amount, transactionId: orderId });
                         localStorage.removeItem('ma_pending_order');
                     })
                     .catch(() => {
                         setOrder({ id: orderId, ...pending, total: null });
                         setState('success');
+                        trackAdsConversion({ value: pending?.total, transactionId: orderId });
                         localStorage.removeItem('ma_pending_order');
                     });
             } else {

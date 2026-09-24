@@ -7,6 +7,7 @@ import { CartDrawer } from "@/components/CartDrawer";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { CookieBanner } from "@/components/CookieBanner";
 import MarketingScriptsManager from "@/components/MarketingScriptsManager";
+import GoogleAdsTag from "@/components/GoogleAdsTag";
 import PopupManager from "@/components/PopupManager";
 
 const geistSans = Geist({
@@ -223,6 +224,7 @@ export default function RootLayout({ children }) {
       </head>
       <body className={`${geistSans.variable} antialiased`} suppressHydrationWarning={true}>
         <MarketingScriptsManager />
+        <GoogleAdsTag />
         <ShopProvider>
           <div className="min-h-screen bg-white text-zinc-900 font-sans flex flex-col">
             <Navbar />
