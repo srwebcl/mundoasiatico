@@ -76,7 +76,7 @@ export default function PopupManager() {
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 20 }}
                         transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-                        className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+                        className="relative w-full max-w-md max-h-[90vh] bg-white rounded-2xl shadow-2xl overflow-y-auto flex flex-col"
                     >
                         {/* Botón de cierre */}
                         <button
@@ -86,16 +86,18 @@ export default function PopupManager() {
                             <X className="w-5 h-5" />
                         </button>
 
-                        {/* Imagen (si existe) */}
+                        {/* Imagen (si existe). Se adapta al formato real de cada imagen: sin
+                            alto fijo ni recorte, solo un tope de altura por seguridad para
+                            fotos muy verticales (ahí sí se ve completa, "achicada"). */}
                         {activePopup.image && (
-                            <div className="w-full h-48 bg-gray-100 relative">
+                            <div className="w-full bg-gray-100 relative">
                                 {/* El backend ya entrega la URL completa (igual que noticias/hero);
                                     antes se reconstruía a mano con NEXT_PUBLIC_API_URL, que incluye
                                     "/api", resultando en ".../api/storage/..." (404). */}
                                 <img
                                     src={activePopup.image}
                                     alt={activePopup.title}
-                                    className="w-full h-full object-cover"
+                                    className="w-full h-auto max-h-[60vh] object-contain"
                                 />
                             </div>
                         )}
