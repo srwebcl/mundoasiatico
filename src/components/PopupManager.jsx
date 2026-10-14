@@ -89,8 +89,11 @@ export default function PopupManager() {
                         {/* Imagen (si existe) */}
                         {activePopup.image && (
                             <div className="w-full h-48 bg-gray-100 relative">
+                                {/* El backend ya entrega la URL completa (igual que noticias/hero);
+                                    antes se reconstruía a mano con NEXT_PUBLIC_API_URL, que incluye
+                                    "/api", resultando en ".../api/storage/..." (404). */}
                                 <img
-                                    src={`${process.env.NEXT_PUBLIC_API_URL}/storage/${activePopup.image}`}
+                                    src={activePopup.image}
                                     alt={activePopup.title}
                                     className="w-full h-full object-cover"
                                 />
